@@ -831,9 +831,9 @@ Put all configurations in the hash-table 'mon-configdb'
           (insert (format "<compass>\n"))
 
           (funcall f-insert (car (alist-get ':ships ships-alist)))
-           (mapc #'(lambda (y)
+          (mapc #'(lambda (y)
                     (funcall f-insert y))
-                 (cdr (alist-get ':ships ships-alist)))
+                (cdr (alist-get ':ships ships-alist)))
 
            (insert (format "</compass>\n"))
            (buffer-string))))
@@ -965,7 +965,7 @@ Put all configurations in the hash-table 'mon-configdb'
            (replace-pat "</span>"))
       (replace-regexp-in-string regexp-pat replace-pat string)))
 
-
+ 
   (defun mon-sanitize-html-tag-span-beg(string backend info &optional class-name prefix-pat suffix-pat)
     (let* ((class-str (and class-name
                            (concat " class=\"" class-name "\"")))
@@ -1007,6 +1007,50 @@ Put all configurations in the hash-table 'mon-configdb'
   (eval-after-load 'ox '(add-to-list
                          'org-export-filter-special-block-functions
                          'mon-proxy-articles-index-special-block-filter))
+#+END_SRC
+
+**** Add author section between title and abstract
+#+BEGIN_SRC emacs-lisp
+  (defun mon-proxy-articles-special-block-filter (block-data backend info)
+
+    (cond ((eq backend 'html)
+           (let ((file (buffer-file-name (current-buffer))))
+
+             (if (and file (not (string-match-p "index.org" file)))
+
+                 (let* ((f-link (lambda (x) (plist-get (nth 1 x) :raw-link)))
+                        (f-name (lambda (x) (nth 2 x)))
+                        (f-name-and-link (lambda (x)
+                                           (progn (format "<a href=\"%s\">%s</a>\n"
+                                                          (funcall f-link x)
+                                                          (funcall f-name x)))))
+                        ;;
+                        (author-property (plist-get info :author))
+                        ;;
+                        (author-and-link
+                         (cond ((null author-property) "Anonymous")
+                               ((atom author-property) author-property)
+                               ((consp (car author-property))
+                                (mapconcat
+                                 'identity
+                                 (cl-loop for x in author-property by #'cddr collect (funcall f-name-and-link x))
+                                 "  "))))
+                        ;;
+                        (block-data1
+                         (concat
+                          (format "<span class=\"author\"> %s </span>\n\n" author-and-link)
+                          block-data)))
+                   ;;
+                   ;;nth==  0                                      2
+                   ;;       ((link (:type https ...) AuthorName1), (link (:type https ...) AuthorName2))
+                   ;;nth==   0     1                 2              0    1                 2
+
+                   (setq block-data block-data1)))))))
+
+
+  (eval-after-load 'ox '(add-to-list
+                         'org-export-filter-special-block-functions
+                         'mon-proxy-articles-special-block-filter))
 #+END_SRC
 *** Project-alist
 **** Utilities
