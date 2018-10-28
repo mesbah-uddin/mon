@@ -925,13 +925,26 @@ Put all configurations in the hash-table 'mon-configdb'
   (defun mon-format-entry-article (entry style project)
       (when (not (directory-name-p entry))
 
-        (let* ((author-property (car (org-publish-find-property entry :author project)))
+        (let* ((f-link (lambda (x) (plist-get (nth 1 x) :raw-link)))
+               (f-name (lambda (x) (nth 2 x)))
+               (f-name-and-link (lambda (x)
+                                  (progn (format "[[%s][%s]]"
+                                                 (funcall f-link x)
+                                                 (funcall f-name x)))))
+               (author-property (org-publish-find-property entry :author project))
                (author-and-link
                 (cond ((null author-property) "Anonymous")
                       ((atom author-property) author-property)
-                      (t (format "[[%s][%s]]"
-                                 (plist-get (nth 1 author-property) :raw-link)
-                                 (nth 2 author-property))))))
+                      ((consp (car author-property))
+                       (mapconcat
+                        'identity
+                        (cl-loop for x in author-property by #'cddr collect (funcall f-name-and-link x))
+                        ", ")))))
+               ;;(author-and-link
+               ;; (cond ((null author-property) "Anonymous")
+               ;;       ((atom author-property) author-property)
+               ;;       (t (format "[[%s][%s]]"
+               ;;                  (plist-get (nth 1 author-property) :raw-link)
 
           (concat
            (format "
