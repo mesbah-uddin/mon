@@ -156,8 +156,8 @@ SOFTWARE.
     (interactive)
 
     (goto-char (point-min))
-    ;;(replace-regexp "[ \t\r\n]+" ""))
-    (replace-regexp "[\t\n]+" ""))
+    (while (search-forward-regexp "[ \t\r\n]+" nil 'noerror)
+      (replace-match "")))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (defun mon-css-add-license (&optional css-file-path comments)
@@ -529,15 +529,18 @@ SOFTWARE.
           (save-excursion
             (if org-descriptive-links
                 (org-toggle-link-display))
-            (replace-regexp "^\\[\\[file:stock/grains/media/"
-                            (concat "[[file:" (replace-regexp-in-string ;; for now replace all of the suffix-string in hyperlink
-                                               "[ aA-zZ]+/"
-                                               "../"
-                                               (file-relative-name
-                                                (file-name-directory target-filename) ;; such as "stock/grains/articles/a.org"
-                                                "stock/grains"))
-                                    "media/"))
-
+            (while (search-forward-regexp
+                    "^\\[\\[file:stock/grains/media/" nil 'noerror)
+              (replace-match
+               (concat "[[file:" (replace-regexp-in-string ;; for now replace all of the suffix-string in hyperlink
+                                  "[ aA-zZ]+/"
+                                  "../"
+                                  (file-relative-name
+                                   (file-name-directory target-filename) ;; such as "stock/grains/articles/a.org"
+                                   "stock/grains"))
+                       "media/")
+               t
+               'literal))
             )
           ;;(goto-char (point-min)) ;; heading may be different now, use point-min--> try save-excursion instead
 
