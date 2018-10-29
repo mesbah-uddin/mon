@@ -830,7 +830,7 @@ Put all configurations in the hash-table 'mon-configdb'
           (insert (format "<compass>\n"))
 
           (funcall f-insert (car (alist-get ':ships ships-alist)))
-           (mapc '(lambda (y)
+           (mapc #'(lambda (y)
                     (funcall f-insert y))
                  (cdr (alist-get ':ships ships-alist)))
 
@@ -858,7 +858,7 @@ Put all configurations in the hash-table 'mon-configdb'
     (let ((f-local-css-path (lambda (x) (mon-genpath (list (mon-theme-deploy-dir) "assets" "css" x)))))
       (with-temp-buffer
 
-        (mapc '(lambda (y) (insert (format "<link rel=\"stylesheet\" type=\"text/css\" href=\"/%s\" />\n" (funcall f-local-css-path y))))
+        (mapc #'(lambda (y) (insert (format "<link rel=\"stylesheet\" type=\"text/css\" href=\"/%s\" />\n" (funcall f-local-css-path y))))
               local-css-list)
         (buffer-string))))
 #+END_SRC
@@ -874,7 +874,7 @@ Put all configurations in the hash-table 'mon-configdb'
   (defun mon-html-head-extra-impl (&optional local-css-list)
     (let ((f-local-css-path (lambda (x) (mon-genpath (list (mon-theme-deploy-dir) "assets" "css" x)))))
       (with-temp-buffer
-        (mapc '(lambda (y) (insert (format "<link rel=\"stylesheet\" type=\"text/css\" href=\"/%s\" />\n" (funcall f-local-css-path y))))
+        (mapc #'(lambda (y) (insert (format "<link rel=\"stylesheet\" type=\"text/css\" href=\"/%s\" />\n" (funcall f-local-css-path y))))
               local-css-list)
         (buffer-string))))
 #+END_SRC
