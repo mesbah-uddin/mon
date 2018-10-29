@@ -791,6 +791,27 @@ Put all configurations in the hash-table 'mon-configdb'
 #+END_SRC
 **** Postamble
 #+BEGIN_SRC emacs-lisp
+  ;; Define advice
+  (defun mon-add-org-html-format-spec (oldfun &rest args)
+    "Format spec for obtaining the :output-file"
+    (let* ((info (nth 0 args)) ;; take out the only argument from list
+           ;;(outfile `((?f . ,(file-name-nondirectory
+           ;;                   (nth 0 (mapcar #'(lambda (y)
+           ;;                                      (plist-get y :output-file))
+           ;;                                  args))))))
+           (pub-dir (plist-get info :publishing-directory))
+           (prefix-dir (mon-genpath (cdr (split-string pub-dir "/"))))
+           (outfile `((?f . ,(concat prefix-dir ;; (file-name-as-directory prefix-dir) -- do not use "./" as a relative directory
+                                     (file-name-nondirectory (plist-get info :output-file)))))))
+
+      ;; apply passes arguments separately (spreads the list)
+      (append (apply oldfun args) outfile)))
+
+  ;; Add advice
+  (advice-add 'org-html-format-spec :around #'mon-add-org-html-format-spec)
+#+END_SRC
+
+#+BEGIN_SRC emacs-lisp
   (defun mon-html-postamble (&optional init-theme)
     "<p>Last update: <span class=\"date\">%C</span></p>")
 #+END_SRC
