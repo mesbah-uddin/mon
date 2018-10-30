@@ -1195,7 +1195,7 @@ Put all configurations in the hash-table 'mon-configdb'
   (add-to-list 'org-publish-project-alist
                ;; Various misc files in the root
                (list (mon-publish-alist-name nil "-top") ;; default
-                     :base-directory (mon-base-directory nil "about")
+                     :base-directory (mon-base-directory nil "apex")
                      :base-extension "org"
 
                      :publishing-directory (mon-publishing-directory)
@@ -1206,7 +1206,7 @@ Put all configurations in the hash-table 'mon-configdb'
 
                      :html-postamble (mon-html-postamble)
                      :html-preamble (mon-html-preamble
-                                     "about"
+                                     "apex"
                                      "proxy"
                                      "LowLand *Travellers*"   ;; mainsail/headline @ args: ship-structure
                                      "Never stop exploring!") ;; headsail/headline @ args: ship-structure
@@ -1229,7 +1229,7 @@ Put all configurations in the hash-table 'mon-configdb'
 
                      :html-postamble (mon-html-postamble)
                      :html-preamble (mon-html-preamble
-                                     "about"
+                                     "apex"
                                      "proxy"
                                      "HighLand *Travellers*" ;; mainsail/headline @ args: ship-structure
                                      "Also keep exploring!") ;; headsail/headline @ args: ship-structure
