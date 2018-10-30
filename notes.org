@@ -641,6 +641,46 @@ SOFTWARE.
             end ;; nth= 4
             )))
 #+END_SRC
+** REST API
+*** Facebook API
+#+BEGIN_SRC emacs-lisp
+  (defun mon-facebook-comments-plugin-meta-props ()
+    "<meta property=\"fb:app_id\" content='{2325134224372901}', />
+  ")
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-facebook-comments-plugin-editor ()
+    "<div class=\"fb-comments\" data-href=\"https://mesbah-uddin.github.io/%f\" data-numposts=\"10\"> </div>
+  ")
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-facebook-comments-plugin-codes ()
+    "<div id=\"fb-root\"></div>
+     <script>
+
+       window.fbAsyncInit = function() {
+         FB.init({
+           appId      : '{2325134224372901}',
+           cookie     : true,
+           xfbml      : true,
+           version    : '{3.2}'
+         });
+
+         FB.AppEvents.logPageView();
+         };
+
+         (function(d, s, id) {
+           var js, fjs = d.getElementsByTagName(s)[0];
+           if (d.getElementById(id)) return;
+           js = d.createElement(s); js.id = id;
+           js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.2&appId=2325134224372901';
+           fjs.parentNode.insertBefore(js, fjs);
+         }(document, 'script', 'facebook-jssdk'));
+
+     </script>
+    ")
+#+END_SRC
+
 ** HTML Publishing
 *** Congfiguration database
 Put all configurations in the hash-table 'mon-configdb'
@@ -813,7 +853,9 @@ Put all configurations in the hash-table 'mon-configdb'
 
 #+BEGIN_SRC emacs-lisp
   (defun mon-html-postamble (&optional init-theme)
-    "<p>Last update: <span class=\"date\">%C</span></p>")
+    (concat "<p>Last update: <span class=\"date\">%C</span></p>"
+            "\n"
+            (mon-facebook-comments-plugin-editor)))
 #+END_SRC
 **** Preamble
 #+BEGIN_SRC emacs-lisp
@@ -831,33 +873,35 @@ Put all configurations in the hash-table 'mon-configdb'
   (defun mon-html-preamble-impl-proxy (&optional ships-alist mainsail headsail)
     "Note: mainsail/headsail are placeholders for main/sub-headline."
 
-      (let* ((f-name (lambda (x) (alist-get ':name  x)))
-             (f-link (lambda (x) (alist-get ':anchor  x)))
-             (f-insert
-              (lambda (x)
-                (progn
-                  (insert (format "  <a href=\"%s\">%s</a>\n"
-                                  (expand-file-name (file-name-as-directory
-                                                     (funcall f-link x))
-                                                    "/")
-                                  (funcall f-name x)
-                                  ))))))
+    (let* ((f-name (lambda (x) (alist-get ':name  x)))
+           (f-link (lambda (x) (alist-get ':anchor  x)))
+           (f-insert
+            (lambda (x)
+              (progn
+                (insert (format "  <a href=\"%s\">%s</a>\n"
+                                (expand-file-name (file-name-as-directory
+                                                   (funcall f-link x))
+                                                  "/")
+                                (funcall f-name x)))))))
 
+      (with-temp-buffer
 
-        (with-temp-buffer
-          (insert (format "<h1 class=\"mainsail\">%s\n" (or mainsail "%%MAIN-HEADLINE")))
-          (insert (format "  <p class=\"headsail\"> %s </p>\n" (or headsail "%%SUB-HEADLINE")))
+        (insert (mon-facebook-comments-plugin-codes))
 
-          (insert (format "</h1>\n"))
-          (insert (format "<compass>\n"))
+        (insert (format "<h1 class=\"mainsail\">%s\n" (or mainsail "%%MAIN-HEADLINE")))
+        (insert (format "  <p class=\"headsail\"> %s </p>\n" (or headsail "%%SUB-HEADLINE")))
 
-          (funcall f-insert (car (alist-get ':ships ships-alist)))
-          (mapc #'(lambda (y)
-                    (funcall f-insert y))
-                (cdr (alist-get ':ships ships-alist)))
+        (insert (format "</h1>\n"))
+        (insert (format "<compass>\n"))
 
-           (insert (format "</compass>\n"))
-           (buffer-string))))
+        (funcall f-insert (car (alist-get ':ships ships-alist)))
+        (mapc #'(lambda (y)
+                  (funcall f-insert y))
+              (cdr (alist-get ':ships ships-alist)))
+
+        (insert (format "</compass>\n"))
+
+        (buffer-string))))
 #+END_SRC
 
 **** Head
@@ -882,6 +926,9 @@ Put all configurations in the hash-table 'mon-configdb'
 
         (mapc #'(lambda (y) (insert (format "<link rel=\"stylesheet\" type=\"text/css\" href=\"/%s\" />\n" (funcall f-local-css-path y))))
               local-css-list)
+
+        (insert (mon-facebook-comments-plugin-meta-props))
+
         (buffer-string))))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
