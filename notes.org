@@ -1029,14 +1029,19 @@ Put all configurations in the hash-table 'mon-configdb'
            (format "
         [[file:%s][%s]]
         ,#+begin_wrap-up
+        <h1 class=\"cruise-headline\">[[file:%s][%s]]</h1>
         <span class=\"cruise-date\"> %s </span> by <span class=\"cruise-crew\"> %s </span>
         ,#+INCLUDE: \"%s::takeaway\"
         [[file:%s][Read more]]
         <hr />
         ,#+end_wrap-up
         "
+                   "DUMMY";;entry
+                   "DUMMY";;(org-publish-find-title entry project)
+                   ;;
                    entry
                    (org-publish-find-title entry project)
+                   ;;
                    (format-time-string "%B %e, %Y" (org-publish-find-date entry project))
                    author-and-link
                    entry
@@ -1145,84 +1150,109 @@ Put all configurations in the hash-table 'mon-configdb'
       (replace-regexp-in-string regexp-pat replace-pat string)))
 #+END_SRC
 
-**** Remove keywords-region from takeaway section
+**** Filter-final-output-functions
 #+BEGIN_SRC emacs-lisp
-  (defun mon-proxy-articles-index-special-block-filter (block-data backend info)
-
+  (defun mon-proxy-articles-filter-final-output-functions (block-data backend info)
     (cond ((eq backend 'html)
            (let ((file (buffer-file-name (current-buffer))))
-             (if (and file
-                    (string-match-p "index.org" file))
-
-                 (let* ((block-data1 (mon-sanitize-html-tag-hr block-data backend info))
-                        ;;
-                        (block-data2 (mon-sanitize-html-tag-span-end block-data1 backend info))
-                        (block-data3 (mon-sanitize-html-tag-span-beg block-data2 backend info "cruise-crew"))
-                        (block-data4 (mon-sanitize-html-tag-span-beg block-data3 backend info "cruise-date"))
-                        ;;
-                        (block-data5 (replace-regexp-in-string
-                                      "[ \t\n]*\<p>[ \t\n]Keywords: .*[ \t\n]*</p>[ \t\n]*" "" block-data4))
-                        ;;
-                        (block-data6 (replace-regexp-in-string
-                                    "</p></div>[ \t\n]*<p>[ \t\n]*\\(.*\\)[ \t\n]*\\(<hr />\\)[ \t\n]*</p>"
-                                  "\\1\\2\n</p>\n</div>" block-data5))
-                        ;;(regexp-pat2 "</div>\\([ \t\n]*\\)<p>")
-                        ;;(replace-pat2"</div>\\1<p style=\"display:inline\">")
-                        ;;(block-data6 (replace-regexp-in-string regexp-pat2 replace-pat2 block-data5))
-                        ;;
-                        )
-                   (setq block-data block-data6)))))))
-
-
+             (cond ((and file ;; journey
+                         (string-match-p "index.org" file)
+                         (not (string= (plist-get info :publishing-directory) (mon-publishing-directory))))
+                    (mon-local-filter-final-output-blog-index block-data backend info))
+                   ((and file ;; harbor
+                         (string-match-p "index.org" file)
+                         (string= (plist-get info :publishing-directory) (mon-publishing-directory)))
+                    (mon-local-filter-final-output-layout-page block-data backend info))
+                   ((and file ;; jaunt
+                         (not (string-match-p "index.org" file)))
+                    (mon-local-filter-final-output-blog-nonindex block-data backend info)))))))
 
   (eval-after-load 'ox '(add-to-list
-                         'org-export-filter-special-block-functions
-                         'mon-proxy-articles-index-special-block-filter))
+                         'org-export-filter-final-output-functions
+                         'mon-proxy-articles-filter-final-output-functions))
 #+END_SRC
-
-**** Add author section between title and takeaway
 #+BEGIN_SRC emacs-lisp
-  (defun mon-proxy-articles-special-block-filter (block-data backend info)
+  (defun mon-local-filter-final-output-blog-index (block-data backend info)
+    (let* ((div-name "journey")
+           (block-data-1 (mon-local-filter-embed-layers-in-contents-div div-name block-data backend info))
+           (block-data-2 (mon-local-filter-remove-sitemap-entry-auto-headlines block-data-1 backend info))
+           (block-data-3 (mon-local-filter-embed-layers-after-body block-data-2 backend info)))
 
-    (cond ((eq backend 'html)
-           (let ((file (buffer-file-name (current-buffer))))
-
-             (if (and file (not (string-match-p "index.org" file)))
-
-                 (let* ((f-link (lambda (x) (plist-get (nth 1 x) :raw-link)))
-                        (f-name (lambda (x) (nth 2 x)))
-                        (f-name-and-link (lambda (x)
-                                           (progn (format "<a href=\"%s\">%s</a>\n"
-                                                          (funcall f-link x)
-                                                          (funcall f-name x)))))
-                        ;;
-                        (author-property (plist-get info :author))
-                        ;;
-                        (author-and-link
-                         (cond ((null author-property) "Anonymous")
-                               ((atom author-property) author-property)
-                               ((consp (car author-property))
-                                (mapconcat
-                                 'identity
-                                 (cl-loop for x in author-property by #'cddr collect (funcall f-name-and-link x))
-                                 "  "))))
-                        ;;
-                        (block-data1
-                         (concat
-                          (format "<span class=\"cruise-crew\"> %s </span>\n\n" author-and-link)
-                          block-data)))
-                   ;;
-                   ;;nth==  0                                      2
-                   ;;       ((link (:type https ...) AuthorName1), (link (:type https ...) AuthorName2))
-                   ;;nth==   0     1                 2              0    1                 2
-
-                   (setq block-data block-data1)))))))
-
-
-  (eval-after-load 'ox '(add-to-list
-                         'org-export-filter-special-block-functions
-                         'mon-proxy-articles-special-block-filter))
+      (setq block-data block-data-3)))
 #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-local-filter-final-output-layout-page (block-data backend info)
+    (let* ((div-name "harbor")
+           (block-data-1 (mon-local-filter-embed-layers-in-contents-div div-name block-data backend info))
+           (block-data-2 (mon-local-filter-embed-layers-after-body block-data-1 backend info))
+           (block-data-3 (mon-local-filter-rename-heading-class block-data-2 backend info)))
+      (setq block-data block-data-3)))
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-local-filter-final-output-blog-nonindex (block-data backend info)
+    (let* ((div-name "jaunt")
+           (block-data-1 (mon-local-filter-embed-layers-in-contents-div div-name block-data backend info))
+           (block-data-2 (mon-local-filter-embed-layers-after-body block-data-1 backend info))
+           (block-data-3 (mon-local-filter-rename-heading-class block-data-2 backend info)))
+      (setq block-data block-data-3)))
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-local-filter-embed-layers-in-contents-div (div-name block-data backend info)
+    (let* ((block-data-beg
+            (when (string-match "[ \t\n]<div id=\"content\">" block-data)
+              (replace-regexp-in-string
+               "[ \t\n]<div id=\"content\">"
+               (format "<!-- preamble -->\n<div class=\"main-deck\">\n <div class=\"%s\">\n\n\n\n" div-name)
+               block-data)))
+           (block-data-end
+            (when (string-match "</div>[ \t\n]*<div id=\"postamble\" class=\"status\">" block-data-beg)
+              (replace-regexp-in-string
+               "\\(</div>\\)\\([ \t\n]*<div id=\"postamble\" class=\"status\">\\)"
+               (format "\n\n\n\n </div><!--- %s --->\n\\1<!-- main-deck -->\n\n\n\n\\2" div-name)
+               block-data-beg))))
+
+      block-data-end))
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-local-filter-remove-sitemap-entry-auto-headlines (block-data backend info)
+    (let* ((block-tagstart-trimmed
+            (replace-regexp-in-string
+             "<div id=\"outline-container-org.*\" class=\"outline-2\">[ \t\n]<h2 id=\"org.*\"><a href=\"DUMMY\">DUMMY</a></h2>[ \t\n]<div class=\"outline-text-2\" id=\"text-org.*\">"
+             "\n"
+             block-data))
+           (block-tag-trimmed
+            (replace-regexp-in-string
+             "\\(Read more</a><hr />[ \t\n]</p>[ \t\n]</div>\\)[ \t\n]+</div>[ \t\n]</div>[ \t\n]</div>"
+             "\\1<!-- takeaway -->\n</div><!-- wrap-up -->\n"
+             block-tagstart-trimmed)))
+
+      block-tag-trimmed))
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-local-filter-embed-layers-after-body (block-data backend info)
+    (let* ((block-body-newtag-appended
+            (replace-regexp-in-string
+             "<body>"
+             "<body>\n<div class=\"boat hull\">\n\n"
+             block-data))
+           (block-body-newtag-prepended
+            (replace-regexp-in-string
+             "</body>"
+             "\n\n</div><!-- boat hull -->\n<body>"
+             block-body-newtag-appended)))
+
+      block-body-newtag-prepended))
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-local-filter-rename-heading-class (block-data backend info)
+    (let ((block-data-1
+           (replace-regexp-in-string
+            "<h1 class=\"title\">\\(.*\\)</h1>"
+             "<h1 class=\"course-title\">\\1</h1>"
+             block-data)))
+    block-data-1))
+#+END_SRC
+
 *** Project-alist
 **** Utilities
 #+BEGIN_SRC emacs-lisp
