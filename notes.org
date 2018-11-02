@@ -1029,7 +1029,7 @@ Put all configurations in the hash-table 'mon-configdb'
            (format "
         [[file:%s][%s]]
         ,#+begin_wrap-up
-        <span class=\"cruise-date\"> %s </span> by <span class=\"author\"> %s </span>
+        <span class=\"cruise-date\"> %s </span> by <span class=\"cruise-crew\"> %s </span>
         ,#+INCLUDE: \"%s::takeaway\"
         [[file:%s][Read more]]
         <hr />
@@ -1078,7 +1078,7 @@ Put all configurations in the hash-table 'mon-configdb'
                  (let* ((block-data1 (mon-sanitize-html-tag-hr block-data backend info))
                         ;;
                         (block-data2 (mon-sanitize-html-tag-span-end block-data1 backend info))
-                        (block-data3 (mon-sanitize-html-tag-span-beg block-data2 backend info "author"))
+                        (block-data3 (mon-sanitize-html-tag-span-beg block-data2 backend info "cruise-crew"))
                         (block-data4 (mon-sanitize-html-tag-span-beg block-data3 backend info "cruise-date"))
                         ;;
                         (block-data5 (replace-regexp-in-string
@@ -1130,7 +1130,7 @@ Put all configurations in the hash-table 'mon-configdb'
                         ;;
                         (block-data1
                          (concat
-                          (format "<span class=\"author\"> %s </span>\n\n" author-and-link)
+                          (format "<span class=\"cruise-crew\"> %s </span>\n\n" author-and-link)
                           block-data)))
                    ;;
                    ;;nth==  0                                      2
