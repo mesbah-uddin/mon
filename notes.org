@@ -889,7 +889,7 @@ Put all configurations in the hash-table 'mon-configdb'
            (f-insert
             (lambda (x)
               (progn
-                (insert (format "  <a href=\"%s\">%s</a>\n"
+                (insert (format "\n  <a href=\"%s\">%s</a>"
                                 (expand-file-name (file-name-as-directory
                                                    (funcall f-link x))
                                                   "/")
@@ -897,24 +897,22 @@ Put all configurations in the hash-table 'mon-configdb'
 
       (with-temp-buffer
 
-        (insert (mon-facebook-comments-plugin-codes))
-
-        (insert (format "<h1 class=\"mainsail\">%s\n" (or mainsail "%%MAIN-HEADLINE")))
-        (insert (format "  <p class=\"headsail\"> %s </p>\n" (or headsail "%%SUB-HEADLINE")))
-
-        (insert (format "</h1>\n"))
-        (insert (format "<compass>\n"))
+        (insert (format "<div class=\"masthead\">"))
+        (insert (format "\n <h3 class=\"mainsail\"><a href=\"localhost:8000\" title=\"Home\">%s</a></h3>" (or mainsail "%%MAIN-HEADLINE")))
+        (insert (format "\n <h3 class=\"headsail\"><small>%s</small></h3>" (or headsail "%%SUB-HEADLINE")))
+        (insert (format "\n <ul class=\"compass\">"))
 
         (funcall f-insert (car (alist-get ':ships ships-alist)))
         (mapc #'(lambda (y)
                   (funcall f-insert y))
               (cdr (alist-get ':ships ships-alist)))
 
-        (insert (format "</compass>\n"))
+        (insert (format "\n </ul>"))
+        (insert (format "\n</div> <!-- masthead -->\n"))
 
+        (insert (mon-facebook-comments-plugin-codes))
         (buffer-string))))
 #+END_SRC
-
 **** Head
 #+BEGIN_SRC emacs-lisp
   (defun mon-html-head (&optional local-css-list)
@@ -3479,11 +3477,11 @@ Put all configurations in the hash-table 'mon-configdb'
   }
 
 
-  compass a {
+  .compass a {
       background: none;
   }
 
-  compass {
+  .compass {
       font-family: $monospace;
       font-weight: 700;
       text-transform: uppercase;
@@ -3492,12 +3490,12 @@ Put all configurations in the hash-table 'mon-configdb'
       hyphens: none;
   }
 
-  compass {
+  .compass {
       margin-top: 1em;
       font-size: 1rem;
   }
 
-  compass > a {
+  .compass > a {
       margin: 0 1ex;
       color:#FF8C00;
   }
@@ -6963,11 +6961,11 @@ textarea {
   }
 
 
-  compass a {
+  .compass a {
       background: none;
   }
 
-  compass {
+  .compass {
       font-family: $monospace;
       font-weight: 700;
       text-transform: uppercase;
@@ -6976,7 +6974,7 @@ textarea {
       hyphens: none;
   }
 
-  compass {
+  .compass {
       position:absolute;
       /*width:50%;
         height:100%;*/
@@ -6992,7 +6990,7 @@ textarea {
     font-size: 1rem;
   }
 
-  compass > a {
+  .compass > a {
       margin: 0 1ex;
       color:#FF8C00;
   }
