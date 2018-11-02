@@ -798,7 +798,7 @@ Put all configurations in the hash-table 'mon-configdb'
 *** Theme
 **** Name and deploy directory
 #+BEGIN_SRC emacs-lisp
-  (setf (gethash 'theme-name mon-configdb) '"proxy")
+  (setf (gethash 'theme-name mon-configdb) '"poole")
 
   (defun mon-theme-name (&optional init-theme-name)
     (or init-theme-name
@@ -920,12 +920,10 @@ Put all configurations in the hash-table 'mon-configdb'
   Note: It is possible to override the global value by setting
   ,#+HTML_HEAD: attributes appropriately in individual .org files."
 
-    (mon-html-head-impl (list
-                         "normalize.css"
-                         "htmlize.css"
-                         "orgstyle-bare.css"
-                         "orgstyle-custom.css")))
-
+    (mon-html-head-impl
+     (list "style.css" "syntax.css") ;; poole
+     ;; (list "normalize.css" "htmlize.css" "orgstyle-bare.css" "orgstyle-custom.css") ;; proxy
+     ))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (defun mon-html-head-impl (&optional local-css-list)
@@ -954,22 +952,26 @@ Put all configurations in the hash-table 'mon-configdb'
       (with-temp-buffer
         (mapc #'(lambda (y) (insert (format "<link rel=\"stylesheet\" type=\"text/css\" href=\"/%s\" />\n" (funcall f-local-css-path y))))
               local-css-list)
+
+        (insert (format "<link href='http://fonts.googleapis.com/css?family=Droid+Serif' rel='stylesheet' type='text/css'>"))
+        (insert (format "<link href='http://fonts.googleapis.com/css?family=Droid+Sans+Mono' rel='stylesheet' type='text/css'>"))
+
         (buffer-string))))
 #+END_SRC
 
 *** Sitemaps
 **** ARTICLES
 #+BEGIN_SRC emacs-lisp
-    (defun mon-sitemap-function-article (title list)
-      (mapconcat
-       'identity
-       (list
-        (concat "#+TITLE: " title)
-        (org-list-to-subtree list '(:istart "** "))
-        "
-       ,#+OPTIONS: title:nil num:nil toc:nil
-       ,#+HTML_HEAD_EXTRA: <link rel=\"stylesheet\" type=\"text/css\" href=\"/chunk/themes/proxy/assets/css/style-article-index.css\"/>")
-       "\n\n"))
+  (defun mon-sitemap-function-article (title list)
+    (mapconcat
+     'identity
+     (list
+      (concat "#+TITLE: " title)
+      (org-list-to-subtree list '(:istart "** "))
+      (format "
+     ,#+OPTIONS: title:nil num:nil toc:nil
+     ,#+HTML_HEAD_EXTRA: <link rel=\"stylesheet\" type=\"text/css\" href=\"/chunk/themes/%s/assets/css/%s\"/>" (mon-theme-name) "style-article-index.css"))
+     "\n\n"))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (defun mon-format-entry-article-div (entry style project)
@@ -1216,7 +1218,7 @@ Put all configurations in the hash-table 'mon-configdb'
                      :html-postamble (mon-html-postamble)
                      :html-preamble (mon-html-preamble
                                      "apex"
-                                     "proxy"
+                                     (mon-theme-name)
                                      "LowLand *Travellers*"   ;; mainsail/headline @ args: ship-structure
                                      "Never stop exploring!") ;; headsail/headline @ args: ship-structure
 
@@ -1239,7 +1241,7 @@ Put all configurations in the hash-table 'mon-configdb'
                      :html-postamble (mon-html-postamble)
                      :html-preamble (mon-html-preamble
                                      "apex"
-                                     "proxy"
+                                     (mon-theme-name)
                                      "HighLand *Travellers*" ;; mainsail/headline @ args: ship-structure
                                      "Also keep exploring!") ;; headsail/headline @ args: ship-structure
 
