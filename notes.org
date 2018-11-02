@@ -980,9 +980,9 @@ Put all configurations in the hash-table 'mon-configdb'
        (format "
       [[file:%s][%s]]
       ,#+begin_wrap-up
-      ,#+begin_date
+      ,#+begin_cruise-date
       %s
-      ,#+end_date
+      ,#+end_cruise-date
       ,#+begin_tags
       %s
       ,#+end_tags
@@ -1029,7 +1029,7 @@ Put all configurations in the hash-table 'mon-configdb'
            (format "
         [[file:%s][%s]]
         ,#+begin_wrap-up
-        <span class=\"date\"> %s </span> by <span class=\"author\"> %s </span>
+        <span class=\"cruise-date\"> %s </span> by <span class=\"author\"> %s </span>
         ,#+INCLUDE: \"%s::takeaway\"
         [[file:%s][Read more]]
         <hr />
@@ -1079,7 +1079,7 @@ Put all configurations in the hash-table 'mon-configdb'
                         ;;
                         (block-data2 (mon-sanitize-html-tag-span-end block-data1 backend info))
                         (block-data3 (mon-sanitize-html-tag-span-beg block-data2 backend info "author"))
-                        (block-data4 (mon-sanitize-html-tag-span-beg block-data3 backend info "date"))
+                        (block-data4 (mon-sanitize-html-tag-span-beg block-data3 backend info "cruise-date"))
                         ;;
                         (block-data5 (replace-regexp-in-string
                                       "[ \t\n]*\<p>[ \t\n]Keywords: .*[ \t\n]*</p>[ \t\n]*" "" block-data4))
