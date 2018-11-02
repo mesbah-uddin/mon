@@ -968,14 +968,14 @@ Put all configurations in the hash-table 'mon-configdb'
       (concat
        (format "
       [[file:%s][%s]]
-      ,#+begin_article-summary
+      ,#+begin_wrap-up
       ,#+begin_date
       %s
       ,#+end_date
       ,#+begin_tags
       %s
       ,#+end_tags
-      ,#+end_article-summary
+      ,#+end_wrap-up
 
       ,#+INCLUDE: \"%s::takeaway\"
 
@@ -1017,12 +1017,12 @@ Put all configurations in the hash-table 'mon-configdb'
           (concat
            (format "
         [[file:%s][%s]]
-        ,#+begin_article-summary
+        ,#+begin_wrap-up
         <span class=\"date\"> %s </span> by <span class=\"author\"> %s </span>
         ,#+INCLUDE: \"%s::takeaway\"
         [[file:%s][Read more]]
         <hr />
-        ,#+end_article-summary
+        ,#+end_wrap-up
         "
                    entry
                    (org-publish-find-title entry project)
@@ -7026,7 +7026,7 @@ textarea {
   }
 
   /*
-  body .outline-2 .outline-text-2 .article-summary hr {
+  body .outline-2 .outline-text-2 .wrap-up hr {
       border-top: 1px solid #8b8b8b;
   }
   ,*/
@@ -7043,7 +7043,7 @@ textarea {
   /* blog articles */
 
   /*
-  body .article-summary {
+  body .wrap-up {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
@@ -7051,11 +7051,11 @@ textarea {
       font-style: italic;
   }
 
-  body .article-summary p {
+  body .wrap-up p {
       margin:0;
   }
 
-  body .article-summary .tags {
+  body .wrap-up .tags {
       display: flex;
       flex-direction: column;
       text-align:left;
@@ -7073,7 +7073,7 @@ textarea {
       border-bottom: 1px solid #8b8b8b;
   }
 
-  body .article-summary {
+  body .wrap-up {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -7089,18 +7089,18 @@ textarea {
       margin-right:auto;
       /*border-bottom: 1px solid #8b8b8b;*/
   }
-  body .article-summary hr {
-      display: none; /* not used, instead opt a horizontal line with CSS in .article-summary above */
+  body .wrap-up hr {
+      display: none; /* not used, instead opt a horizontal line with CSS in .wrap-up above */
       /*border-top: 1px solid #8b8b8b;*/
   }
 
 
-  body .article-summary p {
+  body .wrap-up p {
       margin:0;
   }
 
 
-  body .article-summary .tags {
+  body .wrap-up .tags {
       display: flex;
       flex-direction: row;
       text-align:left;
