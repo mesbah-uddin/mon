@@ -224,10 +224,10 @@ SOFTWARE.
                      "STOCK" "GRAINS" "ARTICLES") ;; Outline "STOCK/GRAINS/ARTICLES" must exist
            "* TODO %^{Title}
   ,#+OPTIONS: toc:nil
-  ,#+begin_abstract
-  %^{Abstract}
+  ,#+begin_takeaway
+  %^{Takeaway}
   Keywords: %^{Keywords (comma separated)}
-  ,#+end_abstract
+  ,#+end_takeaway
   %\\2\n%?\n"
            :prepend t :kill-buffer t)
           ))
@@ -498,7 +498,7 @@ SOFTWARE.
             (this-create-timestamp (mon-org-custom-property-get "CREATE_TIMESTAMP"))
             (this-update-timestamp (mon-org-custom-property-get "UPDATE_TIMESTAMP")) ;; (last update provided via postamble) ponder if keeping that information in property drawer will be of use
             (this-keywords (concat (mon-org-custom-property-get "KEYWORDS")
-                                   (mon-parse-abstract-section)
+                                   (mon-parse-takeaway-section)
                                    )) ;; need to take-out from buffer
             (this-startup (mon-org-custom-property-get "STARTUP"))
             )
@@ -571,16 +571,16 @@ SOFTWARE.
       (widen)))
 #+END_SRC
 ** Parse contents
-*** TODO Parse abstract section [(Cf. Backend) Remove keywords-region from abstract section)]
+*** TODO Parse takeaway section [(Cf. Backend) Remove keywords-region from takeaway section)]
 #+BEGIN_SRC emacs-lisp
-  (defun mon-parse-abstract-section (&optional delete-keywords)
+  (defun mon-parse-takeaway-section (&optional delete-keywords)
 
     (interactive)
 
     (save-excursion
       ;;(org-back-to-heading)
 
-      (let* ((section-boundary (mon-abstract-section-boundary-positions))
+      (let* ((section-boundary (mon-takeaway-section-boundary-positions))
              (keywords-region-boundary (mon-keywords-region-boundary-positions))
              (keywords-values (buffer-substring
                                (nth 3 keywords-region-boundary)
@@ -612,12 +612,12 @@ SOFTWARE.
     (delete-region beg end))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
-  (defun mon-abstract-section-boundary-positions ()
+  (defun mon-takeaway-section-boundary-positions ()
     (goto-char (point-min)) ;; Required
     ;;(message (format "%s" (buffer-substring (point-min) (+ (point-min) 200))))
 
-    (let ((beg (+ 1 (re-search-forward "#\\+begin_abstract$")))
-          (end (progn (re-search-forward "#\\+end_abstract$")
+    (let ((beg (+ 1 (re-search-forward "#\\+begin_takeaway$")))
+          (end (progn (re-search-forward "#\\+end_takeaway$")
                       (match-beginning 0))))
       (cons beg end)))
 #+END_SRC
@@ -977,7 +977,7 @@ Put all configurations in the hash-table 'mon-configdb'
       ,#+end_tags
       ,#+end_article-summary
 
-      ,#+INCLUDE: \"%s::abstract\"
+      ,#+INCLUDE: \"%s::takeaway\"
 
       [[file:%s][Read more]]
       "
@@ -1019,7 +1019,7 @@ Put all configurations in the hash-table 'mon-configdb'
         [[file:%s][%s]]
         ,#+begin_article-summary
         <span class=\"date\"> %s </span> by <span class=\"author\"> %s </span>
-        ,#+INCLUDE: \"%s::abstract\"
+        ,#+INCLUDE: \"%s::takeaway\"
         [[file:%s][Read more]]
         <hr />
         ,#+end_article-summary
@@ -1055,7 +1055,7 @@ Put all configurations in the hash-table 'mon-configdb'
       (replace-regexp-in-string regexp-pat replace-pat string)))
 #+END_SRC
 
-**** Remove keywords-region from abstract section
+**** Remove keywords-region from takeaway section
 #+BEGIN_SRC emacs-lisp
   (defun mon-proxy-articles-index-special-block-filter (block-data backend info)
 
@@ -1090,7 +1090,7 @@ Put all configurations in the hash-table 'mon-configdb'
                          'mon-proxy-articles-index-special-block-filter))
 #+END_SRC
 
-**** Add author section between title and abstract
+**** Add author section between title and takeaway
 #+BEGIN_SRC emacs-lisp
   (defun mon-proxy-articles-special-block-filter (block-data backend info)
 
@@ -2831,13 +2831,13 @@ Put all configurations in the hash-table 'mon-configdb'
       margin: 1em auto;
   }
 
-  .abstract {
+  .takeaway {
       margin: auto;
       width: 80%;
       font-style: italic;
   }
 
-  .abstract p:last-of-type:before {
+  .takeaway p:last-of-type:before {
       content: "    ";
       white-space: pre;
   }
@@ -3493,13 +3493,13 @@ Put all configurations in the hash-table 'mon-configdb'
   /* -- */
 
 
-  .abstract {
+  .takeaway {
       margin:auto;
       width:80%;
       font-style:italic
   }
 
-  .abstract p:last-of-type:before {
+  .takeaway p:last-of-type:before {
       content:"    ";
       white-space:pre
   }
@@ -5684,13 +5684,13 @@ textarea {
       margin: 1em auto;
   }
 
-  .abstract {
+  .takeaway {
       margin: auto;
       width: 80%;
       font-style: italic;
   }
 
-  .abstract p:last-of-type:before {
+  .takeaway p:last-of-type:before {
       content: "    ";
       white-space: pre;
   }
@@ -6301,13 +6301,13 @@ textarea {
       margin:1em auto
   }
 
-  .abstract {
+  .takeaway {
       margin:auto;
       width:80%;
       font-style:italic
   }
 
-  .abstract p:last-of-type:before {
+  .takeaway p:last-of-type:before {
       content:"    ";
       white-space:pre
   }
@@ -6986,7 +6986,7 @@ textarea {
       color:#FF8C00;
   }
 
-  body .abstract {
+  body .takeaway {
     margin: auto;
     width: 90%;
     font-style: italic;
@@ -6994,10 +6994,10 @@ textarea {
     /*border-bottom: 3px double #8b8b8b;*/
   }
 
-  body .abstract p:last-of-type {
+  body .takeaway p:last-of-type {
     margin-bottom:.5em;
   }
-  body .abstract p:last-of-type:before {
+  body .takeaway p:last-of-type:before {
       content:"";
       white-space:pre
   }
@@ -7107,7 +7107,7 @@ textarea {
       margin-top:5px;
   }
 
-  body .abstract {
+  body .takeaway {
       margin: auto;
       width: 100%;
       font-style: normal; /*italic;*/
@@ -7130,7 +7130,7 @@ textarea {
       margin:0;
   }
 
-  .abstract {
+  .takeaway {
       margin:auto;
       width:95%;
       font-style:normal
