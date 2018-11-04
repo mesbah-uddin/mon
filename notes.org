@@ -661,7 +661,11 @@ SOFTWARE.
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (defun mon-facebook-comments-plugin-editor ()
-    "<div class=\"fb-comments\" data-href=\"https://mesbah-uddin.github.io/%f\" data-numposts=\"10\"> </div>
+    "
+  <div class=\"feedback\">
+   <div class=\"fb-comments\" data-href=\"https://mesbah-uddin.github.io/%f\" data-numposts=\"10\" data-width=\"100%%\" data-colorscheme=\"light\">
+   </div>
+  </div>\n
   ")
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
