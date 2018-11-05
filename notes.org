@@ -112,6 +112,17 @@ SOFTWARE.
 
 * SRC
 ** Generic elisp utilities
+*** Utilities
+#+BEGIN_SRC emacs-lisp
+  (defun mc () ;; quickly reloading this file and publish
+    (interactive)
+    (org-babel-load-file
+     (expand-file-name "notes.org"
+                       (file-name-as-directory "/Volumes/mu/git/mon_m")))
+    (org-publish (concat "mon-" (mon-theme-name)) t)
+    )
+#+END_SRC
+
 *** Genpath
 #+BEGIN_SRC emacs-lisp
   (defun mon-genpath (path-elem &optional absolute)
