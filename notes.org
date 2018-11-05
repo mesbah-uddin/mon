@@ -1422,36 +1422,38 @@ Put all configurations in the hash-table 'mon-configdb'
 
 <<Variables>>
 #+BEGIN_SRC css
-  $gray-1: #f9f9f9;
-  $gray-2: #ccc;
-  $gray-3: #767676;
-  $gray-4: #515151;
-  $gray-5: #313131;
+  :root {
+    --poole-default-gray-1: #f9f9f9;
+    --poole-default-gray-2: #ccc;
+    --poole-default-gray-3: #767676;
+    --poole-default-4: #515151;
+    --poole-default-5: #313131;
 
-  $red: #ac4142;
-  $orange: #d28445;
-  $yellow: #f4bf75;
-  $green: #90a959;
-  $cyan: #75b5aa;
-  $blue: #268bd2;
-  /* $blue: #6a9fb5; */
-  $brown: #8f5536;
+    --poole-default-red: #ac4142;
+    --poole-default-orange: #d28445;
+    --poole-default-yellow: #f4bf75;
+    --poole-default-green: #90a959;
+    --poole-default-cyan: #75b5aa;
+    --poole-default-blue: #268bd2;
+    /* --poole-default-blue: #6a9fb5; */
+    --poole-default-brown: #8f5536;
 
-  $root-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
-  $root-font-size: 16px;
-  $root-line-height: 1.5;
+    --poole-default-root-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
+    --poole-default-root-font-size: 16px;
+    --poole-default-root-line-height: 1.5;
 
-  $body-color: #515151;
-  $body-bg: #fff;
-  $link-color: $blue;
+    --poole-default-body-color: #515151;
+    --poole-default-body-bg: #fff;
+    --poole-default-link-color: --poole-default-blue;
 
-  $border-color: #e5e5e5;
+    --poole-default-border-color: #e5e5e5;
 
-  $large-breakpoint: 38em;
-  $large-font-size: 20px;
+    --poole-default-large-breakpoint: 38em;
+    --poole-default-large-font-size: 20px;
 
-  $code-font-family: Menlo, Monaco, "Courier New", monospace;
-  $code-color: #bf616a;
+    --poole-default-code-font-family: Menlo, Monaco, "Courier New", monospace;
+    --poole-default-code-color: #bf616a;
+  }
 #+END_SRC
 
 <<base>>
@@ -1474,37 +1476,40 @@ Put all configurations in the hash-table 'mon-configdb'
   }
 
   html {
-      font-family: $root-font-family;
-      font-size: $root-font-size;
-      line-height: $root-line-height;
-
-      @media (min-width: $large-breakpoint) {
-          font-size: $large-font-size;
-      }
+      font-family: var(--poole-default-root-font-family);
+      font-size: var(--poole-default-root-font-size);
+      line-height: var(root-line-height);
+  }
+  /* @media (min-width: var(--poole-default-large-breakpoint)) { */
+  @media (min-width: 38em) {
+    html {
+        font-size: var(--poole-default-large-font-size);
+    }
   }
 
+
   body {
-      color: $body-color;
-      background-color: $body-bg;
+      color: var(--poole-default-body-color);
+      background-color: var(--poole-default-body-bg);
       -webkit-text-size-adjust: 100%;
       -ms-text-size-adjust: 100%;
   }
 
   /* No `:visited` state is required by default (browsers will use `a`) */
   a {
-      color: $link-color;
+      color: var(--poole-default-link-color);
       text-decoration: none;
-
-      /* `:focus` is linked to `:hover` for basic accessibility */
-      &:hover,
-      &:focus {
-          text-decoration: underline;
-      }
-
-      strong {
-          color: inherit;
-      }
   }
+  /* `:focus` is linked to `:hover` for basic accessibility */
+  a:hover,
+  a:focus {
+      text-decoration: underline;
+  }
+  a strong {
+      color: inherit;
+  }
+
+
 
   img {
       display: block;
@@ -1606,11 +1611,10 @@ Put all configurations in the hash-table 'mon-configdb'
       font-weight: bold;
       color: #555;
       text-transform: uppercase;
-
-      &[title] {
-          cursor: help;
-          border-bottom: 1px dotted #e5e5e5;
-      }
+  }
+  abbr[title] {
+      cursor: help;
+      border-bottom: 1px dotted #e5e5e5;
   }
 
   blockquote {
@@ -1618,12 +1622,12 @@ Put all configurations in the hash-table 'mon-configdb'
       margin: .8rem 0;
       color: #7a7a7a;
       border-left: .25rem solid #e5e5e5;
-
-      p:last-child {
-          margin-bottom: 0;
-      }
-
-      @media (min-width: 30em) {
+  }
+  blockquote p:last-child {
+      margin-bottom: 0;
+  }
+  @media (min-width: 30em) {
+      blockquote {
           padding-right: 5rem;
           padding-left: 1.25rem;
       }
@@ -1741,13 +1745,13 @@ Put all configurations in the hash-table 'mon-configdb'
 
   code,
   pre {
-      font-family: $code-font-family;
+      font-family: var(--poole-default-code-font-family);
   }
 
   code {
       padding: .25em .5em;
       font-size: 85%;
-      color: $code-color;
+      color: var(--poole-default-code-color);
       background-color: #f9f9f9;
       border-radius: 3px;
   }
@@ -1773,22 +1777,20 @@ Put all configurations in the hash-table 'mon-configdb'
       line-height: 1.4;
       background-color: #f9f9f9;
       border-radius: .25rem;
-
-      pre {
-          margin-bottom: 0;
-          overflow-x: auto;
-      }
-
-      .lineno {
-          display: inline-block; /* Ensures the null space also isn't selectable */
-          padding-right: .75rem;
-          padding-left: .25rem;
-          color: #999;
-          /* Make sure numbers aren't selectable */
-          -webkit-user-select: none;
-          -moz-user-select: none;
-          user-select: none;
-      }
+  }
+  .highlight pre {
+      margin-bottom: 0;
+      overflow-x: auto;
+  }
+  .highlight .lineno {
+      display: inline-block; /* Ensures the null space also isn't selectable */
+      padding-right: .75rem;
+      padding-left: .25rem;
+      color: #999;
+      /* Make sure numbers aren't selectable */
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
   }
 
 
@@ -1857,17 +1859,15 @@ Put all configurations in the hash-table 'mon-configdb'
   .masthead-title {
       margin-top: 0;
       margin-bottom: 0;
-      color: $gray-4;
-
-      a {
-          color: inherit;
-      }
-
-      small {
-          font-size: 75%;
-          font-weight: 400;
-          opacity: .5;
-      }
+      color: var(--poole-default-gray-4);
+  }
+  .masthead-title a {
+      color: inherit;
+  }
+  .masthead-title small {
+      font-size: 75%;
+      font-weight: 400;
+      opacity: .5;
   }
 #+END_SRC
 
@@ -1882,10 +1882,10 @@ Put all configurations in the hash-table 'mon-configdb'
   .page,
   .post {
       margin-bottom: 4em;
-
-      li + li {
-          margin-top: .25rem;
-      }
+  }
+  .page li + li,
+  .post li + li {
+      margin-top: .25rem;
   }
 
   /* Blog post or page title */
@@ -1921,27 +1921,25 @@ Put all configurations in the hash-table 'mon-configdb'
   .related-posts {
       padding-left: 0;
       list-style: none;
-
-      h3 {
-          margin-top: 0;
-      }
-
-      li {
-          small {
-              font-size: 75%;
-              color: #999;
-          }
-
-          a:hover {
-              color: #268bd2;
-              text-decoration: none;
-
-              small {
-                  color: inherit;
-              }
-          }
-      }
   }
+  .related-posts h3 {
+      margin-top: 0;
+  }
+  .related-posts li {
+  }
+  .related-posts li small {
+      font-size: 75%;
+      color: #999;
+  }
+  .related-posts li a:hover {
+      color: #268bd2;
+      text-decoration: none;
+  }
+  .related-posts li a:hover small {
+      color: inherit;
+  }
+
+
 #+END_SRC
 
 <<pagination>>
@@ -1964,11 +1962,11 @@ Put all configurations in the hash-table 'mon-configdb'
       padding: 1rem;
       border: solid #eee;
       border-width: 1px 0;
-
-      &:first-child {
-          margin-bottom: -1px;
-      }
   }
+  .pagination-item:first-child {
+      margin-bottom: -1px;
+  }
+
 
   /* Only provide a hover state for linked pagination items */
   a.pagination-item:hover {
@@ -1985,18 +1983,18 @@ Put all configurations in the hash-table 'mon-configdb'
           float: left;
           width: 50%;
           border-width: 1px;
-
-          &:first-child {
-              margin-bottom: 0;
-              border-top-left-radius:    4px;
-              border-bottom-left-radius: 4px;
-          }
-          &:last-child {
-              margin-left: -1px;
-              border-top-right-radius:    4px;
-              border-bottom-right-radius: 4px;
-          }
       }
+      .pagination-item:first-child {
+          margin-bottom: 0;
+          border-top-left-radius:    4px;
+          border-bottom-left-radius: 4px;
+      }
+      .pagination-item:last-child {
+          margin-left: -1px;
+          border-top-right-radius:    4px;
+          border-bottom-right-radius: 4px;
+      }
+
   }
 #+END_SRC
 
