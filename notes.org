@@ -1423,36 +1423,36 @@ Put all configurations in the hash-table 'mon-configdb'
 <<Variables>>
 #+BEGIN_SRC css
   :root {
-    --poole-default-gray-1: #f9f9f9;
-    --poole-default-gray-2: #ccc;
-    --poole-default-gray-3: #767676;
-    --poole-default-4: #515151;
-    --poole-default-5: #313131;
+    --default-gray-1: #f9f9f9;
+    --default-gray-2: #ccc;
+    --default-gray-3: #767676;
+    --default-4: #515151;
+    --default-5: #313131;
 
-    --poole-default-red: #ac4142;
-    --poole-default-orange: #d28445;
-    --poole-default-yellow: #f4bf75;
-    --poole-default-green: #90a959;
-    --poole-default-cyan: #75b5aa;
-    --poole-default-blue: #268bd2;
-    /* --poole-default-blue: #6a9fb5; */
-    --poole-default-brown: #8f5536;
+    --default-red: #ac4142;
+    --default-orange: #d28445;
+    --default-yellow: #f4bf75;
+    --default-green: #90a959;
+    --default-cyan: #75b5aa;
+    --default-blue: #268bd2;
+    /* --default-blue: #6a9fb5; */
+    --default-brown: #8f5536;
 
-    --poole-default-root-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
-    --poole-default-root-font-size: 16px;
-    --poole-default-root-line-height: 1.5;
+    --default-root-font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
+    --default-root-font-size: 16px;
+    --default-root-line-height: 1.5;
 
-    --poole-default-body-color: #515151;
-    --poole-default-body-bg: #fff;
-    --poole-default-link-color: --poole-default-blue;
+    --default-body-color: #515151;
+    --default-body-bg: #fff;
+    --default-link-color: --default-blue;
 
-    --poole-default-border-color: #e5e5e5;
+    --default-border-color: #e5e5e5;
 
-    --poole-default-large-breakpoint: 38em;
-    --poole-default-large-font-size: 20px;
+    --default-large-breakpoint: 38em;
+    --default-large-font-size: 20px;
 
-    --poole-default-code-font-family: Menlo, Monaco, "Courier New", monospace;
-    --poole-default-code-color: #bf616a;
+    --default-code-font-family: Menlo, Monaco, "Courier New", monospace;
+    --default-code-color: #bf616a;
   }
 #+END_SRC
 
@@ -1476,28 +1476,28 @@ Put all configurations in the hash-table 'mon-configdb'
   }
 
   html {
-      font-family: var(--poole-default-root-font-family);
-      font-size: var(--poole-default-root-font-size);
+      font-family: var(--default-root-font-family);
+      font-size: var(--default-root-font-size);
       line-height: var(root-line-height);
   }
-  /* @media (min-width: var(--poole-default-large-breakpoint)) { */
+  /* @media (min-width: var(--default-large-breakpoint)) { */
   @media (min-width: 38em) {
     html {
-        font-size: var(--poole-default-large-font-size);
+        font-size: var(--default-large-font-size);
     }
   }
 
 
   body {
-      color: var(--poole-default-body-color);
-      background-color: var(--poole-default-body-bg);
+      color: var(--default-body-color);
+      background-color: var(--default-body-bg);
       -webkit-text-size-adjust: 100%;
       -ms-text-size-adjust: 100%;
   }
 
   /* No `:visited` state is required by default (browsers will use `a`) */
   a {
-      color: var(--poole-default-link-color);
+      color: var(--default-link-color);
       text-decoration: none;
   }
   /* `:focus` is linked to `:hover` for basic accessibility */
@@ -1745,13 +1745,13 @@ Put all configurations in the hash-table 'mon-configdb'
 
   code,
   pre {
-      font-family: var(--poole-default-code-font-family);
+      font-family: var(--default-code-font-family);
   }
 
   code {
       padding: .25em .5em;
       font-size: 85%;
-      color: var(--poole-default-code-color);
+      color: var(--default-code-color);
       background-color: #f9f9f9;
       border-radius: 3px;
   }
@@ -1859,7 +1859,7 @@ Put all configurations in the hash-table 'mon-configdb'
   .masthead-title {
       margin-top: 0;
       margin-bottom: 0;
-      color: var(--poole-default-gray-4);
+      color: var(--default-gray-4);
   }
   .masthead-title a {
       color: inherit;
