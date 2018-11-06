@@ -1830,6 +1830,7 @@ Put all configurations in the hash-table 'mon-configdb'
    ,*
    ,* Styles for managing the structural hierarchy of the site.
    ,*/
+  .boat,
   .container {
       max-width: 38rem;
       padding-left:  1.5rem;
@@ -1837,6 +1838,41 @@ Put all configurations in the hash-table 'mon-configdb'
       margin-left:  auto;
       margin-right: auto;
   }
+
+
+  .main-deck {
+      font-size: 100%;
+      margin:0;
+      margin-left: 0.3rem;
+      margin-right: 0.3rem;
+      max-width: 32rem;
+      /* padding-left: 0; */
+      /* padding-right:0; */
+      /* margin-left:  auto; */
+      /* margin-right: auto; */
+  }
+  /*
+  .main-deck p {
+      text-align: justify;
+  }
+  .main-deck dd {
+      text-align: justify;
+  }
+  .main-deck h1 {
+      font-size: 1.5em;
+  }
+  .main-deck h2 {
+      margin-top: 1.7rem;
+      font-size: 1.25rem;
+  }
+  .main-deck h3,
+  .main-deck h4,
+  .main-deck h5,
+  .main-deck h6 {
+      margin-top: 1rem;
+      font-size: 1rem;
+  }
+  ,*/
 
   footer {
       margin-bottom: 2rem;
@@ -1875,19 +1911,44 @@ Put all configurations in the hash-table 'mon-configdb'
       padding-bottom: 1rem;
       margin-bottom: 3rem;
   }
+  .masthead a {
+      color: #202020;
+  }
 
+  .masthead small {
+      vertical-align: text-top;
+      font-size: 90%;
+      font-weight: 400;
+      color: #909090;
+      letter-spacing: 0;
+  }
+
+  .masthead .mainsail,
   .masthead-title {
       margin-top: 0;
       margin-bottom: 0;
       color: var(--default-gray-4);
   }
+  .masthead .mainsail a,
   .masthead-title a {
       color: inherit;
   }
+  .masthead .headsail,
   .masthead-title small {
       font-size: 75%;
       font-weight: 400;
       opacity: .5;
+  }
+  .masthead .compass {
+      list-style: none;
+      padding-left: 0;
+      padding-right: 1rem;
+      width:inherit;
+  }
+  .masthead .compass li {
+      font-size:120%;
+      width: inherit;
+      margin-top:.8em;
   }
 #+END_SRC
 
@@ -1899,6 +1960,12 @@ Put all configurations in the hash-table 'mon-configdb'
    ,* page is wrapped in `.page` and is only used on the page layout.
    ,*/
 
+  .journey h1 {
+      font-size: 1.5rem;
+  }
+
+  .harbor,
+  .jaunt,
   .page,
   .post {
       margin-bottom: 4em;
@@ -1908,18 +1975,31 @@ Put all configurations in the hash-table 'mon-configdb'
       margin-top: .25rem;
   }
 
+  .wrap-up {
+      padding: 0;
+      margin: 0;
+      margin-bottom: 3em;
+  }
+
+
   /* Blog post or page title */
+  .course-title,
+  .cruise-headline,
+  .cruise-headline a,
   .page-title,
   .post-title,
   .post-title a {
       color: #303030;
   }
+  .course-title,
+  .cruise-headline,
   .page-title,
   .post-title {
       margin-top: 0;
   }
 
   /* Meta data line below post title */
+  .cruise-date,
   .post-date {
       display: block;
       margin-top: -.5rem;
@@ -1958,8 +2038,6 @@ Put all configurations in the hash-table 'mon-configdb'
   .related-posts li a:hover small {
       color: inherit;
   }
-
-
 #+END_SRC
 
 <<pagination>>
