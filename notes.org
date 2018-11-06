@@ -1841,6 +1841,26 @@ Put all configurations in the hash-table 'mon-configdb'
   footer {
       margin-bottom: 2rem;
   }
+
+  /* -- comments/feedback region -- */
+  .feedback {
+      width: 100%;
+      float: left;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--default-body-color);
+      background-color: var(--default-body-bg);
+  }
+  .feedback a {
+      color: var(--default-orange);
+  }
+  .fb-comments, .fb-comments span, .fb-comments iframe {
+      min-width: 100% !important;
+      max-width: 100% !important;
+  }
+  .fb-comments a, .fb-comments span a, .fb-comments iframe a {
+      color: var(--default-orange) !important;
+
+  }
 #+END_SRC
 
 <<masthead>>
