@@ -1208,21 +1208,26 @@ Put all configurations in the hash-table 'mon-configdb'
             (when (string-match "</div>[ \t\n]*<div id=\"postamble\" class=\"status\">" block-data-beg)
               (replace-regexp-in-string
                "\\(</div>\\)\\([ \t\n]*<div id=\"postamble\" class=\"status\">\\)"
-               (format "\n\n\n\n </div><!--- %s --->\n\\1<!-- main-deck -->\n\n\n\n\\2" div-name)
+               (format "\n\n\n\n\n </div><!--- %s --->\n\\1<!-- main-deck -->\n\n\n\n\n\\2" div-name)
                block-data-beg))))
 
       block-data-end))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (defun mon-local-filter-remove-sitemap-entry-auto-headlines (block-data backend info)
-    (let* ((block-tagstart-trimmed
+    (let* ((block-nonempty-takeaways
+            (replace-regexp-in-string
+             "\\(<div class=\\\"takeaway\">\\)[ \t\n]*</div>"
+             "\\1\n"
+             block-data))
+           (block-tagstart-trimmed
             (replace-regexp-in-string
              "<div id=\"outline-container-org.*\" class=\"outline-2\">[ \t\n]<h2 id=\"org.*\"><a href=\"DUMMY\">DUMMY</a></h2>[ \t\n]<div class=\"outline-text-2\" id=\"text-org.*\">"
              "\n"
-             block-data))
+             block-nonempty-takeaways))
            (block-tag-trimmed
             (replace-regexp-in-string
-             "\\(Read more</a><hr />[ \t\n]</p>[ \t\n]</div>\\)[ \t\n]+</div>[ \t\n]</div>[ \t\n]</div>"
+             "\\(Read more</a>[ \t\n]*<hr />[ \t\n]*</p>[ \t\n]*</div>\\)[ \t\n]*\\(</div>[ \t\n]\\)*"
              "\\1<!-- takeaway -->\n</div><!-- wrap-up -->\n"
              block-tagstart-trimmed)))
 
