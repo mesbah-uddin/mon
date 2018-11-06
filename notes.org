@@ -1478,7 +1478,7 @@ Put all configurations in the hash-table 'mon-configdb'
   html {
       font-family: var(--default-root-font-family);
       font-size: var(--default-root-font-size);
-      line-height: var(root-line-height);
+      line-height: var(--default-root-line-height);
   }
   /* @media (min-width: var(--default-large-breakpoint)) { */
   @media (min-width: 38em) {
