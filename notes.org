@@ -6,7 +6,7 @@
 #+DATE: %T
 #+STARTUP:indent
 #+STARTUP: inlineimages
-
+#+STARTUP: hideblocks
 
 * LICENSE
 MIT License
