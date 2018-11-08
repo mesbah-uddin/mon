@@ -1473,7 +1473,7 @@ Put all configurations in the hash-table 'mon-configdb'
    ,* Update the foundational and global aspects of the page.
    ,*/
 
- /* http://meyerweb.com/eric/tools/css/reset/
+  /* http://meyerweb.com/eric/tools/css/reset/
      v2.0 | 20110126
      License: none (public domain)
   ,*/
@@ -1522,18 +1522,12 @@ Put all configurations in the hash-table 'mon-configdb'
       border-spacing: 0;
   }
 
-/* http://meyerweb.com/eric/tools/css/reset/ -- v2.0 | 20110126 -- License: none (public domain) */
+  /* http://meyerweb.com/eric/tools/css/reset/ -- v2.0 | 20110126 -- License: none (public domain) */
 
   ,* {
       -webkit-box-sizing: border-box;
       -moz-box-sizing: border-box;
       box-sizing: border-box;
-  }
-
-  html,
-  body {
-      margin: 0;
-      padding: 0;
   }
 
   html {
@@ -1543,15 +1537,17 @@ Put all configurations in the hash-table 'mon-configdb'
   }
   /* @media (min-width: var(--default-large-breakpoint)) { */
   @media (min-width: 38em) {
-    html {
-        font-size: var(--default-large-font-size);
-    }
+      html {
+          font-size: var(--default-large-font-size);
+      }
   }
 
 
   body {
       color: var(--default-body-color);
       background-color: var(--default-body-bg);
+      line-height: var(--default-root-line-height);
+
       -webkit-text-size-adjust: 100%;
       -ms-text-size-adjust: 100%;
   }
