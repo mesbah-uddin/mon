@@ -242,30 +242,38 @@ SOFTWARE.
            (file+olp buffer-file-name
                      "STOCK" "GRAINS" "ARTICLES") ;; Outline "STOCK/GRAINS/ARTICLES" must exist
            "* TODO %^{Title}
-    ,#+OPTIONS: toc:nil
-    ,#+begin_takeaway
-    %^{Takeaway}
-    Keywords: %^{Keywords (comma separated)}
-    ,#+end_takeaway
-    %\\2\n%?\n"
+  ,#+OPTIONS: toc:nil
+  ,#+begin_takeaway
+  %^{Takeaway}
+  Keywords: %^{Keywords (comma separated)}
+  ,#+end_takeaway
+  %\\2\n%?\n"
            :prepend t :kill-buffer t)
           ;;
           ("n" "Notes" entry
            (file+olp buffer-file-name
                      "STOCK" "GRAINS" "NOTES") ;; Outline "STOCK/GRAINS/NOTES" must exist
            "* TODO %^{Title}
-    ,#+OPTIONS: toc:nil
-    ,#+begin_takeaway
-    %^{Takeaway}
-    Keywords: %^{Keywords (comma separated)}
-    ,#+end_takeaway
-    %\\2\n%?\n"
+  ,#+OPTIONS: toc:nil
+  ,#+begin_takeaway
+  %^{Takeaway}
+  Keywords: %^{Keywords (comma separated)}
+  ,#+end_takeaway
+  %\\2\n%?\n"
            :prepend t :kill-buffer t)
+          ;;
+          ("i" "APEX" entry
+           (file+olp buffer-file-name
+                     "STOCK" "GRAINS" "APEX") ;; Outline "STOCK/GRAINS/APEX" must exist
+           "* TODO %^{Title}
+  ,#+OPTIONS: toc:nil
+  %\\1\n%?\n"
+             :prepend t :kill-buffer t)
+            )
           )
-        )
-    ;; To capture using the above template, use C-c c a
-    ;; then interactively input Title and other entries
-    ;; finally C-c C-c to finish.
+      ;; To capture using the above template, use C-c c a
+      ;; then interactively input Title and other entries
+      ;; finally C-c C-c to finish.
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (defun mon-org-capture-after-finalize-hook ()
@@ -1436,6 +1444,7 @@ Put all configurations in the hash-table 'mon-configdb'
 #+END_SRC
 * STOCK
 ** GRAINS
+*** APEX
 *** ARTICLES
 *** NOTES
 ** CHUNK
