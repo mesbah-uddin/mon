@@ -242,17 +242,30 @@ SOFTWARE.
            (file+olp buffer-file-name
                      "STOCK" "GRAINS" "ARTICLES") ;; Outline "STOCK/GRAINS/ARTICLES" must exist
            "* TODO %^{Title}
-  ,#+OPTIONS: toc:nil
-  ,#+begin_takeaway
-  %^{Takeaway}
-  Keywords: %^{Keywords (comma separated)}
-  ,#+end_takeaway
-  %\\2\n%?\n"
+    ,#+OPTIONS: toc:nil
+    ,#+begin_takeaway
+    %^{Takeaway}
+    Keywords: %^{Keywords (comma separated)}
+    ,#+end_takeaway
+    %\\2\n%?\n"
            :prepend t :kill-buffer t)
-          ))
-  ;; To capture using the above template, use C-c c a
-  ;; then interactively input Title and other entries
-  ;; finally C-c C-c to finish.
+          ;;
+          ("n" "Notes" entry
+           (file+olp buffer-file-name
+                     "STOCK" "GRAINS" "NOTES") ;; Outline "STOCK/GRAINS/NOTES" must exist
+           "* TODO %^{Title}
+    ,#+OPTIONS: toc:nil
+    ,#+begin_takeaway
+    %^{Takeaway}
+    Keywords: %^{Keywords (comma separated)}
+    ,#+end_takeaway
+    %\\2\n%?\n"
+           :prepend t :kill-buffer t)
+          )
+        )
+    ;; To capture using the above template, use C-c c a
+    ;; then interactively input Title and other entries
+    ;; finally C-c C-c to finish.
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (defun mon-org-capture-after-finalize-hook ()
@@ -886,8 +899,8 @@ Put all configurations in the hash-table 'mon-configdb'
     "TBD: Constructor for ships /w theme-inheritance someday."
     (mon-html-preamble-impl-proxy '((:ships . (((:name . "About")
                                                 (:anchor . "/"))
-                                               ((:name . "Articles")
-                                                (:anchor . "articles")))))
+                                               ((:name . "Notes")
+                                                (:anchor . "notes")))))
                                   mainsail ;; main-headline
                                   headsail) ;; sub-headline
     )
@@ -1295,7 +1308,7 @@ Put all configurations in the hash-table 'mon-configdb'
                                   (mon-publish-alist-name nil "media") ;; default
                                   (mon-publish-alist-name nil "-top") ;; default
                                   ;;-----
-                                  (mon-publish-alist-name nil "articles")
+                                  (mon-publish-alist-name nil "notes")
                                   )))
 #+END_SRC
 
@@ -1347,8 +1360,8 @@ Put all configurations in the hash-table 'mon-configdb'
                      :html-preamble (mon-html-preamble
                                      "apex"
                                      (mon-theme-name)
-                                     "LowLand *Travellers*"   ;; mainsail/headline @ args: ship-structure
-                                     "Never stop exploring!") ;; headsail/headline @ args: ship-structure
+                                     "Mesbah Uddin"   ;; mainsail/headline @ args: ship-structure
+                                     "Concise notes on improving decisions") ;; headsail/headline @ args: ship-structure
 
                      :html-head-include-default-style nil ;; Disable default css style
                      :html-head-include-scripts nil ;; Disable default javascript
@@ -1370,8 +1383,41 @@ Put all configurations in the hash-table 'mon-configdb'
                      :html-preamble (mon-html-preamble
                                      "apex"
                                      (mon-theme-name)
-                                     "HighLand *Travellers*" ;; mainsail/headline @ args: ship-structure
-                                     "Also keep exploring!") ;; headsail/headline @ args: ship-structure
+                                     "Mesbah Uddin" ;; mainsail/headline @ args: ship-structure
+                                     "Concise notes on improving decisions") ;; headsail/headline @ args: ship-structure
+
+                     :html-head-include-default-style nil ;; Disable default css style
+                     :html-head-include-scripts nil ;; Disable default javascript
+                     :html-head (mon-html-head)
+
+
+                     :auto-sitemap t
+                     :sitemap-filename "index.org"
+                     :sitemap-function 'mon-sitemap-function-article
+                     :sitemap-sort-files 'anti-chronologically
+                     :sitemap-format-entry 'mon-format-entry-article
+                     ;;
+                     :sitemap-style 'list
+                     :with-tags nil
+                     ))
+#+END_SRC
+**** NOTES
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'org-publish-project-alist
+               (list (mon-publish-alist-name nil "notes")
+                     :base-directory (mon-base-directory nil "notes")
+
+                     :publishing-directory (mon-publishing-directory nil "notes")
+                     :publishing-function 'org-html-publish-to-html
+                     :recursive t
+
+
+                     :html-postamble (mon-html-postamble)
+                     :html-preamble (mon-html-preamble
+                                     "apex"
+                                     (mon-theme-name)
+                                     "Mesbah Uddin" ;; mainsail/headline @ args: ship-structure
+                                     "Concise notes on improving decisions") ;; headsail/headline @ args: ship-structure
 
                      :html-head-include-default-style nil ;; Disable default css style
                      :html-head-include-scripts nil ;; Disable default javascript
@@ -1391,6 +1437,7 @@ Put all configurations in the hash-table 'mon-configdb'
 * STOCK
 ** GRAINS
 *** ARTICLES
+*** NOTES
 ** CHUNK
 *** THEMES
 **** POOLE
