@@ -267,11 +267,15 @@ SOFTWARE.
                      "STOCK" "GRAINS" "APEX") ;; Outline "STOCK/GRAINS/APEX" must exist
            "* TODO %^{Title}
   ,#+OPTIONS: toc:nil
-  %\\1\n%?\n"
-             :prepend t :kill-buffer t)
-            )
+  ,#+begin_takeaway
+  %^{Takeaway}
+  Keywords: %^{Keywords (comma separated)}
+  ,#+end_takeaway
+  %\\2\n%?\n"
+           :prepend t :kill-buffer t)
           )
-      ;; To capture using the above template, use C-c c a
+        )
+  ;; To capture using the above template, use C-c c a
       ;; then interactively input Title and other entries
       ;; finally C-c C-c to finish.
 #+END_SRC
@@ -1445,10 +1449,10 @@ Put all configurations in the hash-table 'mon-configdb'
 * STOCK
 ** GRAINS
 *** APEX
-*** ARTICLES
-*** NOTES
-** CHUNK
-*** THEMES
+*** Articles
+*** Notes
+** Chunk
+*** Themes
 **** POOLE
 ***** ASSETS
 ****** CSS
