@@ -245,8 +245,10 @@ SOFTWARE.
   ,#+OPTIONS: toc:nil
   ,#+begin_takeaway
   %^{Takeaway}
-  Keywords: %^{Keywords (comma separated)}
   ,#+end_takeaway
+  ,#+begin_keywords
+  Keywords: %^{Keywords (comma separated)}
+  ,#+end_keywords
   %\\2\n%?\n"
            :prepend t :kill-buffer t)
           ;;
@@ -257,8 +259,10 @@ SOFTWARE.
   ,#+OPTIONS: toc:nil
   ,#+begin_takeaway
   %^{Takeaway}
-  Keywords: %^{Keywords (comma separated)}
   ,#+end_takeaway
+  ,#+begin_keywords
+  Keywords: %^{Keywords (comma separated)}
+  ,#+end_keywords
   %\\2\n%?\n"
            :prepend t :kill-buffer t)
           ;;
@@ -269,15 +273,17 @@ SOFTWARE.
   ,#+OPTIONS: toc:nil
   ,#+begin_takeaway
   %^{Takeaway}
-  Keywords: %^{Keywords (comma separated)}
   ,#+end_takeaway
+  ,#+begin_keywords
+  Keywords: %^{Keywords (comma separated)}
+  ,#+end_keywords
   %\\2\n%?\n"
            :prepend t :kill-buffer t)
           )
         )
   ;; To capture using the above template, use C-c c a
-      ;; then interactively input Title and other entries
-      ;; finally C-c C-c to finish.
+  ;; then interactively input Title and other entries
+  ;; finally C-c C-c to finish.
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (defun mon-org-capture-after-finalize-hook ()
@@ -1449,10 +1455,30 @@ Put all configurations in the hash-table 'mon-configdb'
 * STOCK
 ** GRAINS
 *** APEX
-*** Articles
-*** Notes
-** Chunk
-*** Themes
+**** TODO d
+:PROPERTIES:
+:EXPORT_FILE_NAME: STOCK/GRAINS/APEX/d.org
+:CUSTOM_ID: A74B84BE-2CCD-48BB-9396-5CB4EF1EA559
+:TITLE:    d
+:SUBTITLE:
+:AUTHOR:
+:EMAIL:
+:CREATE_TIMESTAMP: Sun Nov 11 21:40:30 2018
+:STARTUP:
+:END:
+#+OPTIONS: toc:nil
+#+begin_takeaway
+d
+#+end_takeaway
+#+begin_keywords
+Keywords: d
+#+end_keywords
+d
+
+*** ARTICLES
+*** NOTES
+** CHUNK
+*** THEMES
 **** POOLE
 ***** ASSETS
 ****** CSS
