@@ -603,14 +603,23 @@ SOFTWARE.
     (mon-org-subtree-contents-refile-no-props nil base-directory))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
-  (defun mon-org-subtree-contents-refile-no-props (&optional extension base-directory)
+  (defun mon-org-subtree-contents-refile-to-org-no-props-delete-keywords-block (&optional extension base-directory)
+    (interactive)
+    (mon-org-subtree-contents-refile-no-props ".org" t base-directory))
+
+  (defun mon-org-subtree-contents-refile-to-org-no-props-keep-keywords-block (&optional extension base-directory)
+    (interactive)
+    (mon-org-subtree-contents-refile-no-props ".org" nil base-directory))
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-org-subtree-contents-refile-no-props (&optional extension del-keywords-block base-directory)
 
     (save-excursion
       (org-narrow-to-subtree)
       (org-back-to-heading)
 
       (mon-org-custom-keywords-create
-       (replace-regexp-in-string "[ \t\n]*" "" (mon-retrieve-keywords-contents-only t)))
+       (replace-regexp-in-string "[ \t\n]*" "" (mon-retrieve-keywords-contents-only del-keywords-block)))
 
       (let ((org-yank-adjusted-subtrees t)
             (target-filename
