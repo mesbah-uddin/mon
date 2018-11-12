@@ -1132,18 +1132,10 @@ Put all configurations in the hash-table 'mon-configdb'
            (block-data6 (mon-sanitize-html-tag-beg "span" block-data5 backend info "cruise-date"))
            ;;
            (block-data7 (replace-regexp-in-string
-                         "[ \t\n]*\<p>[ \t\n]Keywords: .*[ \t\n]*</p>[ \t\n]*" "" block-data6))
-           ;;
-           (block-data8 (replace-regexp-in-string
                          "</p></div>[ \t\n]*<p>[ \t\n]*\\(.*\\)[ \t\n]*\\(<hr />\\)[ \t\n]*</p>"
-                         "\\1\\2\n</p>\n</div>" block-data7))
-
-           ;;(regexp-pat2 "</div>\\([ \t\n]*\\)<p>")
-           ;;(replace-pat2"</div>\\1<p style=\"display:inline\">")
-           ;;(block-data6 (replace-regexp-in-string regexp-pat2 replace-pat2 block-data5))
-           ;;
+                         "\\1\\2\n</p>\n</div>" block-data6))
            )
-      (setq block-data block-data8))
+      (setq block-data block-data7))
     )
 #+END_SRC
 ***** Add author section between title and takeaway
