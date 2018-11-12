@@ -596,18 +596,18 @@ SOFTWARE.
 #+BEGIN_SRC emacs-lisp
   (defun mon-org-subtree-contents-refile-to-org-no-props (&optional base-directory)
     (interactive)
-    (mon-org-subtree-contents-refile-no-props ".org" base-directory))
+    (mon-org-subtree-contents-refile-no-props ".org" nil base-directory))
 
   (defun mon-org-subtree-contents-refile-bare-no-props (&optional base-directory)
     (interactive)
-    (mon-org-subtree-contents-refile-no-props nil base-directory))
-#+END_SRC
-#+BEGIN_SRC emacs-lisp
+    (mon-org-subtree-contents-refile-no-props nil nil base-directory))
+
   (defun mon-org-subtree-contents-refile-to-org-no-props-delete-keywords-block (&optional extension base-directory)
     (interactive)
     (mon-org-subtree-contents-refile-no-props ".org" t base-directory))
 
   (defun mon-org-subtree-contents-refile-to-org-no-props-keep-keywords-block (&optional extension base-directory)
+    "Identical to: mon-org-subtree-contents-refile-to-org-no-props"
     (interactive)
     (mon-org-subtree-contents-refile-no-props ".org" nil base-directory))
 #+END_SRC
