@@ -450,6 +450,20 @@ SOFTWARE.
           (org-set-property "CREATE_TIMESTAMP" (format-time-string "%c" (current-time)))))
       (widen)))
 #+END_SRC
+**** KEYWORDS
+#+BEGIN_SRC emacs-lisp
+  (defun mon-org-custom-keywords-create (&optional keywords)
+    (interactive)
+
+    (save-excursion
+      (org-back-to-heading)
+      (org-narrow-to-subtree)
+
+      (let ((title (mon-org-custom-property-get "KEYWORDS")))
+        (unless title
+          (org-set-property "KEYWORDS" (or keywords "")))) ;; now, just a placeholder
+      (widen)))
+#+END_SRC
 **** STARTUP OPTIONS
 #+BEGIN_SRC emacs-lisp
   (defun mon-org-custom-startup-options-create ()
@@ -463,6 +477,64 @@ SOFTWARE.
         (unless title
           (org-set-property "STARTUP" ""))) ;; now, just a placeholder
       (widen)))
+#+END_SRC
+** Parse contents
+*** Retrieve takeaway and keywords
+#+BEGIN_SRC emacs-lisp
+  (defun mon-search-matched-region (regexp-pat &optional delete-flag buffer)
+    (save-excursion
+      (with-current-buffer (or buffer (current-buffer))
+
+        (goto-char (point-min))
+
+        (while (re-search-forward regexp-pat nil t)
+          (setq found-matched-string (buffer-substring (match-beginning 0) (match-end 0)))
+          (if delete-flag
+              (delete-region (match-beginning 0) (match-end 0))))))
+
+    (cons (match-beginning 0) found-matched-string))
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-search-keywords-region (&optional delete-flag buffer)
+    (interactive)
+    (mon-search-matched-region
+     "#\\+begin_keywords\\([ \t\n].*\\)*[ \t\n]*#\\+end_keywords"
+     delete-flag
+     buffer))
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-retrieve-keywords-contents-only (&optional delete-flag)
+    (interactive)
+    (let ((region-str (mon-search-keywords-region delete-flag)))
+
+      (replace-regexp-in-string
+       "#\\+end_keywords$"
+       ""
+       (replace-regexp-in-string
+        "#\\+begin_keywords[ \t\n]*Keywords: "
+        ""
+        (cdr region-str)))))
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-search-takeaway-region (&optional delete-flag buffer)
+    (interactive)
+    (mon-search-matched-region
+     "#\\+begin_takeaway\\([ \t\n].*\\)*[ \t\n]*#\\+end_takeaway"
+     delete-flag
+     buffer))
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-retrieve-takeaway-contents-only (&optional delete-flag)
+    (interactive)
+    (let ((region-str (mon-search-takeaway-region delete-flag)))
+
+      (replace-regexp-in-string
+       "#\\+end_takeaway$"
+       ""
+       (replace-regexp-in-string
+        "#\\+begin_takeaway[ \t\n]*"
+        ""
+        (cdr region-str)))))
 #+END_SRC
 ** Refile a subtree from this note
 *** File-local variables
@@ -537,6 +609,9 @@ SOFTWARE.
       (org-narrow-to-subtree)
       (org-back-to-heading)
 
+      (mon-org-custom-keywords-create
+       (replace-regexp-in-string "[ \t\n]*" "" (mon-retrieve-keywords-contents-only t)))
+
       (let ((org-yank-adjusted-subtrees t)
             (target-filename
              (or (mon-org-custom-property-get "EXPORT_FILE_NAME")
@@ -547,9 +622,7 @@ SOFTWARE.
             (this-email (mon-org-custom-property-get "EMAIL"))
             (this-create-timestamp (mon-org-custom-property-get "CREATE_TIMESTAMP"))
             (this-update-timestamp (mon-org-custom-property-get "UPDATE_TIMESTAMP")) ;; (last update provided via postamble) ponder if keeping that information in property drawer will be of use
-            (this-keywords (concat (mon-org-custom-property-get "KEYWORDS")
-                                   (mon-parse-takeaway-section)
-                                   )) ;; need to take-out from buffer
+            (this-keywords (concat (mon-org-custom-property-get "KEYWORDS")))
             (this-startup (mon-org-custom-property-get "STARTUP"))
             )
 
@@ -619,77 +692,6 @@ SOFTWARE.
       (org-narrow-to-subtree)
       (org-babel-tangle)
       (widen)))
-#+END_SRC
-** Parse contents
-*** TODO Parse takeaway section [(Cf. Backend) Remove keywords-region from takeaway section)]
-#+BEGIN_SRC emacs-lisp
-  (defun mon-parse-takeaway-section (&optional delete-keywords)
-
-    (interactive)
-
-    (save-excursion
-      ;;(org-back-to-heading)
-
-      (let* ((section-boundary (mon-takeaway-section-boundary-positions))
-             (keywords-region-boundary (mon-keywords-region-boundary-positions))
-             (keywords-values (buffer-substring
-                               (nth 3 keywords-region-boundary)
-                               (nth 4 keywords-region-boundary))))
-
-        ;; To remove keywords region:
-        (if delete-keywords
-            (progn
-              (message "Region to be removed:\n")
-              (message (format "%s\n****\n" (buffer-substring
-                                             (nth 1 keywords-region-boundary)
-                                             (nth 4 keywords-region-boundary))))
-              ;;(delete-region (nth 1 keywords-region-boundary)
-              ;;               (nth 4 keywords-region-boundary))
-              (mon-remove-keywords-region (nth 1 keywords-region-boundary)
-                                          (nth 4 keywords-region-boundary)))
-          (message "Keywords are not removed by default")
-          )
-
-        (message (format "%s" keywords-values))
-        keywords-values
-        )
-
-      )
-    )
-#+END_SRC
-#+BEGIN_SRC emacs-lisp
-  (defun mon-remove-keywords-region (&optional beg end)
-    (delete-region beg end))
-#+END_SRC
-#+BEGIN_SRC emacs-lisp
-  (defun mon-takeaway-section-boundary-positions ()
-    (goto-char (point-min)) ;; Required
-    ;;(message (format "%s" (buffer-substring (point-min) (+ (point-min) 200))))
-
-    (let ((beg (+ 1 (re-search-forward "#\\+begin_takeaway$")))
-          (end (progn (re-search-forward "#\\+end_takeaway$")
-                      (match-beginning 0))))
-      (cons beg end)))
-#+END_SRC
-#+BEGIN_SRC emacs-lisp
-  (defun mon-keywords-region-boundary-positions (&optional start finish include-key)
-    "Ponder: narrow-to-region subject to input arguments, then simplify let in caller.
-  include-key is a flag (not) to include the mathed string 'Keyworrds ::' as well.
-  "
-    (goto-char (point-min)) ;; Required
-
-    (let ((beg (+ 0 (re-search-forward "[ \t\n]*Keywords[ ]*[:]*[ ]*")))
-          (regexp-pat-beg (match-beginning 0))
-          (regexp-pat-end (match-end 0))
-          (end (progn (re-search-forward "[,.]*$")
-                      (match-beginning 0))))
-
-      (list (point-min) ;; nth= 0
-            regexp-pat-beg ;; nth= 1
-            regexp-pat-end ;; nth= 2
-            beg ;; nth= 3
-            end ;; nth= 4
-            )))
 #+END_SRC
 ** REST API
 *** Facebook API
@@ -1455,26 +1457,6 @@ Put all configurations in the hash-table 'mon-configdb'
 * STOCK
 ** GRAINS
 *** APEX
-**** TODO d
-:PROPERTIES:
-:EXPORT_FILE_NAME: STOCK/GRAINS/APEX/d.org
-:CUSTOM_ID: A74B84BE-2CCD-48BB-9396-5CB4EF1EA559
-:TITLE:    d
-:SUBTITLE:
-:AUTHOR:
-:EMAIL:
-:CREATE_TIMESTAMP: Sun Nov 11 21:40:30 2018
-:STARTUP:
-:END:
-#+OPTIONS: toc:nil
-#+begin_takeaway
-d
-#+end_takeaway
-#+begin_keywords
-Keywords: d
-#+end_keywords
-d
-
 *** ARTICLES
 *** NOTES
 ** CHUNK
