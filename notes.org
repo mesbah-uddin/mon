@@ -1109,17 +1109,23 @@ Put all configurations in the hash-table 'mon-configdb'
 
     (cond ((eq backend 'html)
            (let ((file (buffer-file-name (current-buffer))))
-             (cond ((and file (string-match-p "index.org" file)) ;; ?? top-level index
+             (cond ((and file ;; journey
+                         (string-match-p "index.org" file)
+                         (not (string= (plist-get info :publishing-directory) (mon-publishing-directory))))
                     (mon-local-filter-special-block-index block-data backend info))
-                   ((and file (not (string-match-p "index.org" file)))
+                   ((and file ;; harbor
+                         (string-match-p "index.org" file)
+                         (string= (plist-get info :publishing-directory) (mon-publishing-directory)))
+                    (mon-local-filter-special-block-nonindex block-data backend info))
+                   ((and file ;; jaunt
+                         (not (string-match-p "index.org" file)))
                     (mon-local-filter-special-block-nonindex block-data backend info))
                    )))))
 
-  (eval-after-load 'ox '(add-to-list
-                         'org-export-filter-special-block-functions
-                         'mon-proxy-articles-special-block-filter))
+      (eval-after-load 'ox '(add-to-list
+                             'org-export-filter-special-block-functions
+                             'mon-proxy-articles-special-block-filter))
 #+END_SRC
-***** Remove keywords-region from takeaway section
 #+BEGIN_SRC emacs-lisp
   (defun mon-local-filter-special-block-index (block-data backend info)
     (let* ((block-data1 (mon-sanitize-html-tag-hr block-data backend info))
@@ -1138,41 +1144,10 @@ Put all configurations in the hash-table 'mon-configdb'
       (setq block-data block-data7))
     )
 #+END_SRC
-***** Add author section between title and takeaway
 #+BEGIN_SRC emacs-lisp
   (defun mon-local-filter-special-block-nonindex (block-data backend info)
-    (let* ((f-link (lambda (x) (plist-get (nth 1 x) :raw-link)))
-           (f-name (lambda (x) (nth 2 x)))
-           (f-name-and-link (lambda (x)
-                              (progn (format "<a href=\"%s\">%s</a>\n"
-                                             (funcall f-link x)
-                                             (funcall f-name x)))))
-           ;;
-           (author-property (plist-get info :author))
-           ;;
-           (author-and-link
-            (cond ((null author-property) "Anonymous")
-                  ((atom author-property) author-property)
-                  ((consp (car author-property))
-                   (mapconcat
-                    'identity
-                    (cl-loop for x in author-property by #'cddr collect (funcall f-name-and-link x))
-                    "  "))))
-           ;;
-           (block-data1
-            (concat
-             (format "<span class=\"cruise-crew\"> %s </span>\n\n" author-and-link)
-             block-data)))
-
-
-      ;;
-      ;;nth==  0                                      2
-      ;;       ((link (:type https ...) AuthorName1), (link (:type https ...) AuthorName2))
-      ;;nth==   0     1                 2              0    1                 2
-
-      (setq block-data block-data1)))
+    )
 #+END_SRC
-
 ***** Tag sanitizers
 #+BEGIN_SRC emacs-lisp
   (defun mon-sanitize-html-tag-hr(string backend info)
@@ -1233,7 +1208,7 @@ Put all configurations in the hash-table 'mon-configdb'
     (let* ((div-name "harbor")
            (block-data-1 (mon-local-filter-embed-layers-in-contents-div div-name block-data backend info))
            (block-data-2 (mon-local-filter-embed-layers-after-body block-data-1 backend info))
-           (block-data-3 (mon-local-filter-rename-heading-class block-data-2 backend info)))
+           (block-data-3 (mon-local-filter-rename-heading-class-no-author block-data-2 backend info)))
       (setq block-data block-data-3)))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
@@ -1297,13 +1272,50 @@ Put all configurations in the hash-table 'mon-configdb'
       block-body-newtag-prepended))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
+  (defun mon-local-filter-rename-heading-class-no-author (block-data backend info)
+    (let ((block-data-1
+           (replace-regexp-in-string
+            "<h1 class=\"title\">\\(.*\\)</h1>"
+            "<h1 class=\"course-title\">\\1</h1>\n "
+            block-data)))
+      block-data-1))
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
   (defun mon-local-filter-rename-heading-class (block-data backend info)
     (let ((block-data-1
            (replace-regexp-in-string
             "<h1 class=\"title\">\\(.*\\)</h1>"
-             "<h1 class=\"course-title\">\\1</h1>"
+             (concat "<h1 class=\"course-title\">\\1</h1>\n " (mon-local-filter-authors-list info))
              block-data)))
     block-data-1))
+#+END_SRC
+
+***** Add author section right after title
+#+BEGIN_SRC emacs-lisp
+  (defun mon-local-filter-authors-list (info)
+    (let* ((f-link (lambda (x) (plist-get (nth 1 x) :raw-link)))
+           (f-name (lambda (x) (nth 2 x)))
+           (f-name-and-link (lambda (x)
+                              (progn (format "<a href=\"%s\">%s</a>\n"
+                                             (funcall f-link x)
+                                             (funcall f-name x)))))
+           ;;
+           (author-property (plist-get info :author))
+           ;;
+           (author-and-link
+            (cond ((null author-property) "Anonymous")
+                  ((atom author-property) author-property)
+                  ((consp (car author-property))
+                   (mapconcat
+                    'identity
+                    (cl-loop for x in author-property by #'cddr collect (funcall f-name-and-link x))
+                    "  ")))))
+           ;;
+           ;;nth==  0                                      2
+           ;;       ((link (:type https ...) AuthorName1), (link (:type https ...) AuthorName2))
+           ;;nth==   0     1                 2              0    1                 2
+           ;;
+           (format "<span class=\"cruise-crew\">\n  %s </span>\n\n" author-and-link)))
 #+END_SRC
 
 *** Project-alist
