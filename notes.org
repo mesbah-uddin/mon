@@ -1084,7 +1084,7 @@ Put all configurations in the hash-table 'mon-configdb'
         [[file:%s][%s]]
         ,#+begin_wrap-up
         <h1 class=\"cruise-headline\">[[file:%s][%s]]</h1>
-        <span class=\"cruise-date\"> %s </span> by <span class=\"cruise-crew\"> %s </span>
+        <span class=\"cruise-date\"> %s </span> %s
         ,#+INCLUDE: \"%s::takeaway\"
         [[file:%s][Read more]]
         <hr />
@@ -1097,7 +1097,10 @@ Put all configurations in the hash-table 'mon-configdb'
                    (org-publish-find-title entry project)
                    ;;
                    (format-time-string "%B %e, %Y" (org-publish-find-date entry project))
-                   author-and-link
+                   ;;
+                   (if author-and-link
+                       (format "by <span class=\"cruise-crew\"> %s </span>" author-and-link)
+                     "")
                    entry
                    entry)))))
  #+END_SRC
