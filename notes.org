@@ -1061,7 +1061,7 @@ Put all configurations in the hash-table 'mon-configdb'
         (let* ((f-link (lambda (x) (plist-get (nth 1 x) :raw-link)))
                (f-name (lambda (x) (nth 2 x)))
                (f-name-and-link (lambda (x)
-                                  (progn (format "[[%s][%s]]"
+                                  (progn (format "\n  [[%s][%s]]"
                                                  (funcall f-link x)
                                                  (funcall f-name x)))))
                (author-property (org-publish-find-property entry :author project))
@@ -1084,7 +1084,7 @@ Put all configurations in the hash-table 'mon-configdb'
         [[file:%s][%s]]
         ,#+begin_wrap-up
         <h1 class=\"cruise-headline\">[[file:%s][%s]]</h1>
-        <span class=\"cruise-date\"> %s </span> %s
+        \n<div>\n <span class=\"cruise-date\"> %s </span>\n%s\n</div>
         ,#+INCLUDE: \"%s::takeaway\"
         [[file:%s][Read more]]
         <hr />
@@ -1099,7 +1099,7 @@ Put all configurations in the hash-table 'mon-configdb'
                    (format-time-string "%B %e, %Y" (org-publish-find-date entry project))
                    ;;
                    (if author-and-link
-                       (format "by <span class=\"cruise-crew\"> %s </span>" author-and-link)
+                       (format "  by\n <span class=\"cruise-crew\"> %s\n </span>" author-and-link)
                      "")
                    entry
                    entry)))))
@@ -1140,11 +1140,11 @@ Put all configurations in the hash-table 'mon-configdb'
            (block-data5 (mon-sanitize-html-tag-beg "span" block-data4 backend info "cruise-crew"))
            (block-data6 (mon-sanitize-html-tag-beg "span" block-data5 backend info "cruise-date"))
            ;;
-           (block-data7 (replace-regexp-in-string
-                         "</p></div>[ \t\n]*<p>[ \t\n]*\\(.*\\)[ \t\n]*\\(<hr />\\)[ \t\n]*</p>"
-                         "\\1\\2\n</p>\n</div>" block-data6))
+           (block-data7 (mon-sanitize-html-tag-end "div" block-data6 backend info))
+           (block-data8 (mon-sanitize-html-tag-beg "div" block-data7 backend info))
            )
-      (setq block-data block-data7))
+
+      (setq block-data block-data8))
     )
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
@@ -1241,23 +1241,24 @@ Put all configurations in the hash-table 'mon-configdb'
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (defun mon-local-filter-remove-sitemap-entry-auto-headlines (block-data backend info)
-    (let* ((block-nonempty-takeaways
-            (replace-regexp-in-string
-             "\\(<div class=\\\"takeaway\">\\)[ \t\n]*</div>"
-             "\\1\n"
-             block-data))
-           (block-tagstart-trimmed
+
+    (let* ((block-tagstart-trimmed
             (replace-regexp-in-string
              "<div id=\"outline-container-org.*\" class=\"outline-2\">[ \t\n]<h2 id=\"org.*\"><a href=\"DUMMY\">DUMMY</a></h2>[ \t\n]<div class=\"outline-text-2\" id=\"text-org.*\">"
              "\n"
-             block-nonempty-takeaways))
+             block-data))
            (block-tag-trimmed
             (replace-regexp-in-string
-             "\\(Read more</a>[ \t\n]*<hr />[ \t\n]*</p>[ \t\n]*</div>\\)[ \t\n]*\\(</div>[ \t\n]\\)*"
-             "\\1<!-- takeaway -->\n</div><!-- wrap-up -->\n"
-             block-tagstart-trimmed)))
+             "\\(Read more</a>[ \t\n]*<hr />[ \t\n]*</p>[ \t\n]*</div>\\)\\([ \t\n]</div>\\)*"
+             "\\1 <!-- wrap-up -->"
+             block-tagstart-trimmed))
+           (respan-takeaway-section
+            (replace-regexp-in-string
+             "\\(</p>\\)*[ \t\n]*\\(</div>\\)[ \t\n]*<p>\\([ \t\n]*<a href=\".*.html\">Read more</a>[ \t\n]<hr />\\)[ \t\n]</p>"
+             "\\3\n\\1\n\\2 <!-- takeaway -->"
+             block-tag-trimmed)))
 
-      block-tag-trimmed))
+      respan-takeaway-section))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (defun mon-local-filter-embed-layers-after-body (block-data backend info)
