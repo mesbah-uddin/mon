@@ -497,14 +497,16 @@ SOFTWARE.
 #+BEGIN_SRC emacs-lisp
   (defun mon-search-keywords-region (&optional delete-flag buffer)
     (interactive)
+
     (mon-search-matched-region
-     "#\\+begin_keywords\\([ \t\n].*\\)*[ \t\n]*#\\+end_keywords"
+     "#\\+begin_keywords[ \t\n]*Keywords: \\(.*[\t\n]\\)*#\\+end_keywords"
      delete-flag
      buffer))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (defun mon-retrieve-keywords-contents-only (&optional delete-flag)
     (interactive)
+
     (let ((region-str (mon-search-keywords-region delete-flag)))
 
       (replace-regexp-in-string
