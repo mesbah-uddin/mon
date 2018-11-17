@@ -247,7 +247,7 @@ SOFTWARE.
   %^{Takeaway}
   ,#+end_takeaway
   ,#+begin_keywords
-  Keywords: %^{Keywords (comma separated)}
+  %^{Keywords (comma separated)}
   ,#+end_keywords
   %\\2\n%?\n"
            :prepend t :kill-buffer t)
@@ -261,7 +261,7 @@ SOFTWARE.
   %^{Takeaway}
   ,#+end_takeaway
   ,#+begin_keywords
-  Keywords: %^{Keywords (comma separated)}
+  %^{Keywords (comma separated)}
   ,#+end_keywords
   %\\2\n%?\n"
            :prepend t :kill-buffer t)
@@ -275,7 +275,7 @@ SOFTWARE.
   %^{Takeaway}
   ,#+end_takeaway
   ,#+begin_keywords
-  Keywords: %^{Keywords (comma separated)}
+  %^{Keywords (comma separated)}
   ,#+end_keywords
   %\\2\n%?\n"
            :prepend t :kill-buffer t)
@@ -499,7 +499,7 @@ SOFTWARE.
     (interactive)
 
     (mon-search-matched-region
-     "#\\+begin_keywords[ \t\n]*Keywords: \\(.*[\t\n]\\)*#\\+end_keywords"
+     "#\\+begin_keywords[ \t\n]*\\(.*[ \t\n]*\\)#\\+end_keywords"
      delete-flag
      buffer))
 #+END_SRC
@@ -508,14 +508,10 @@ SOFTWARE.
     (interactive)
 
     (let ((region-str (mon-search-keywords-region delete-flag)))
-
       (replace-regexp-in-string
-       "#\\+end_keywords$"
-       ""
-       (replace-regexp-in-string
-        "#\\+begin_keywords[ \t\n]*Keywords: "
-        ""
-        (cdr region-str)))))
+       "#\\+begin_keywords[ \t\n]*\\(.*[ \t\n]*\\)#\\+end_keywords"
+       "\\1"
+       (cdr region-str))))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (defun mon-search-takeaway-region (&optional delete-flag buffer)
