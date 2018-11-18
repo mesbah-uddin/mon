@@ -1200,25 +1200,27 @@ Put all configurations in the hash-table 'mon-configdb'
     (let* ((div-name "journey")
            (block-data-1 (mon-local-filter-embed-layers-in-contents-div div-name block-data backend info))
            (block-data-2 (mon-local-filter-remove-sitemap-entry-auto-headlines block-data-1 backend info))
-           (block-data-3 (mon-local-filter-embed-layers-after-body block-data-2 backend info)))
-
-      (setq block-data block-data-3)))
+           (block-data-3 (mon-local-filter-embed-layers-after-body block-data-2 backend info))
+           (block-data-4 (mon-local-filter-rename-head-title-to-unique block-data-3 backend info)))
+      (setq block-data block-data-4)))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (defun mon-local-filter-final-output-layout-page (block-data backend info)
     (let* ((div-name "harbor")
            (block-data-1 (mon-local-filter-embed-layers-in-contents-div div-name block-data backend info))
            (block-data-2 (mon-local-filter-embed-layers-after-body block-data-1 backend info))
-           (block-data-3 (mon-local-filter-rename-heading-class-no-author block-data-2 backend info)))
-      (setq block-data block-data-3)))
+           (block-data-3 (mon-local-filter-rename-heading-class-no-author block-data-2 backend info))
+           (block-data-4 (mon-local-filter-rename-head-title-to-unique block-data-3 backend info)))
+      (setq block-data block-data-4)))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (defun mon-local-filter-final-output-blog-nonindex (block-data backend info)
     (let* ((div-name "jaunt")
            (block-data-1 (mon-local-filter-embed-layers-in-contents-div div-name block-data backend info))
            (block-data-2 (mon-local-filter-embed-layers-after-body block-data-1 backend info))
-           (block-data-3 (mon-local-filter-rename-heading-class block-data-2 backend info)))
-      (setq block-data block-data-3)))
+           (block-data-3 (mon-local-filter-rename-heading-class block-data-2 backend info))
+           (block-data-4 (mon-local-filter-rename-head-title-to-unique block-data-3 backend info)))
+      (setq block-data block-data-4)))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (defun mon-local-filter-embed-layers-in-contents-div (div-name block-data backend info)
@@ -1289,6 +1291,17 @@ Put all configurations in the hash-table 'mon-configdb'
             "<h1 class=\"title\">\\(.*\\)</h1>"
              (concat "<h1 class=\"course-title\">\\1</h1>\n " (mon-local-filter-authors-list info))
              block-data)))
+      block-data-1))
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-local-filter-rename-head-title-to-unique (block-data backend info)
+    (let ((block-data-1
+           (replace-regexp-in-string
+            "<title>.*</title>"
+            (format
+             "<title>%s</title>"
+             (concat "Mesbah Uddin" " : " "Concise notes on improving decisions"))
+            block-data)))
     block-data-1))
 #+END_SRC
 
