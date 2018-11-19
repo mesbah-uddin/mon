@@ -860,6 +860,15 @@ Put all configurations in the hash-table 'mon-configdb'
   (defun mon-theme-deploy-dir (&optional init-theme-name)
     (format "chunk/themes/%s" (mon-theme-name init-theme-name)))
 #+END_SRC
+**** Attributes
+#+BEGIN_SRC emacs-lisp
+  (setf (gethash 'theme-attributes mon-configdb)
+        '((:mainsail . "Mesbah Uddin")
+          (:headsail . "Concise notes on improving decisions")))
+
+  (defun mon-theme-attributes (key &optional init-theme-name)
+    (alist-get key (gethash 'theme-attributes mon-configdb)))
+#+END_SRC
 **** Base extension
 #+BEGIN_SRC emacs-lisp
   (setf (gethash 'mon-attachments mon-configdb)
@@ -1408,8 +1417,8 @@ Put all configurations in the hash-table 'mon-configdb'
                      :html-preamble (mon-html-preamble
                                      "apex"
                                      (mon-theme-name)
-                                     "Mesbah Uddin"   ;; mainsail/headline @ args: ship-structure
-                                     "Concise notes on improving decisions") ;; headsail/headline @ args: ship-structure
+                                     (mon-theme-attributes :mainsail) ;; mainsail/headline @ args: ship-structure
+                                     (mon-theme-attributes :headsail)) ;; headsail/headline @ args: ship-structure
 
                      :html-head-include-default-style nil ;; Disable default css style
                      :html-head-include-scripts nil ;; Disable default javascript
@@ -1431,8 +1440,8 @@ Put all configurations in the hash-table 'mon-configdb'
                      :html-preamble (mon-html-preamble
                                      "apex"
                                      (mon-theme-name)
-                                     "Mesbah Uddin" ;; mainsail/headline @ args: ship-structure
-                                     "Concise notes on improving decisions") ;; headsail/headline @ args: ship-structure
+                                     (mon-theme-attributes :mainsail) ;; mainsail/headline @ args: ship-structure
+                                     (mon-theme-attributes :headsail)) ;; headsail/headline @ args: ship-structure
 
                      :html-head-include-default-style nil ;; Disable default css style
                      :html-head-include-scripts nil ;; Disable default javascript
@@ -1464,8 +1473,8 @@ Put all configurations in the hash-table 'mon-configdb'
                      :html-preamble (mon-html-preamble
                                      "apex"
                                      (mon-theme-name)
-                                     "Mesbah Uddin" ;; mainsail/headline @ args: ship-structure
-                                     "Concise notes on improving decisions") ;; headsail/headline @ args: ship-structure
+                                     (mon-theme-attributes :mainsail) ;; mainsail/headline @ args: ship-structure
+                                     (mon-theme-attributes :headsail)) ;; headsail/headline @ args: ship-structure
 
                      :html-head-include-default-style nil ;; Disable default css style
                      :html-head-include-scripts nil ;; Disable default javascript
