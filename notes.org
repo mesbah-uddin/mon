@@ -1309,9 +1309,11 @@ Put all configurations in the hash-table 'mon-configdb'
             "<title>.*</title>"
             (format
              "<title>%s</title>"
-             (concat "Mesbah Uddin" " : " "Concise notes on improving decisions"))
+             (concat (mon-theme-attributes :mainsail)
+                     " : "
+                     (mon-theme-attributes :headsail)))
             block-data)))
-    block-data-1))
+      block-data-1))
 #+END_SRC
 
 ***** Add author section right after title
