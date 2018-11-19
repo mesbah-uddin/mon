@@ -1816,6 +1816,22 @@ Put all configurations in the hash-table 'mon-configdb'
       font-size: 1.25rem;
       font-weight: 300;
   }
+
+  .outline-2 ul,
+  .outline-2 ol,
+  .outline-2 dl {
+      padding-left: 1.3rem;
+      //padding-left:  1.5rem;
+      //padding-right: 1.5rem;
+      padding-right: auto;
+      margin-left: 1.3rem;
+      //margin-left: 1.5rem;
+      //margin-left:  auto;
+      margin-right: auto;
+
+      list-style-type: disc;
+  }
+
 #+END_SRC
 
 <<syntax>>
