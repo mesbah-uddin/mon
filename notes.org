@@ -704,7 +704,7 @@ SOFTWARE.
 *** Facebook API
 #+BEGIN_SRC emacs-lisp
   (defun mon-facebook-comments-plugin-meta-props ()
-    "<meta property=\"fb:app_id\" content='{2325134224372901}', />
+    "<meta property=\"fb:app_id\" content=\"2325134224372901\" />
   ")
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
@@ -723,10 +723,10 @@ SOFTWARE.
 
        window.fbAsyncInit = function() {
          FB.init({
-           appId      : '{2325134224372901}',
+           appId      : '2325134224372901',
            cookie     : true,
            xfbml      : true,
-           version    : '{3.2}'
+           version    : 'v3.2'
          });
 
          FB.AppEvents.logPageView();
@@ -736,7 +736,7 @@ SOFTWARE.
            var js, fjs = d.getElementsByTagName(s)[0];
            if (d.getElementById(id)) return;
            js = d.createElement(s); js.id = id;
-           js.src = 'https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v3.2&appId=2325134224372901';
+           js.src = 'https://connect.facebook.net/en_US/sdk.js';
            fjs.parentNode.insertBefore(js, fjs);
          }(document, 'script', 'facebook-jssdk'));
 
