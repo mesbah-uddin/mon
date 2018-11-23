@@ -703,9 +703,21 @@ SOFTWARE.
 ** REST API
 *** Facebook API
 #+BEGIN_SRC emacs-lisp
-  (defun mon-facebook-comments-plugin-meta-props ()
-    "<meta property=\"fb:app_id\" content=\"2325134224372901\" />
-  ")
+  (defun mon-facebook-comments-plugin-meta-props (&optional output-file title description)
+    (format "
+
+  <meta property=\"fb:app_id\" content=\"2325134224372901\" />
+  <meta property=\"og:url\" content=\"https://mesbah-uddin.github.io/%s\" />
+  <meta property=\"og:title\" content=\"%s\" />
+  <meta property=\"og:type\" content=\"Website\" />
+  <meta property=\"og:description\" content=\"%s\" />
+  <meta property=\"og:image\" content=\"Replace with some image 200px 200px\" />
+
+  "
+            (or output-file "Replace with URL of the page")
+            (or title "Replace with Page Title")
+            (or description "Add Some description")
+            "Replace with some image 200px 200px"))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (defun mon-facebook-comments-plugin-editor ()
@@ -995,8 +1007,6 @@ Put all configurations in the hash-table 'mon-configdb'
         (mapc #'(lambda (y) (insert (format "<link rel=\"stylesheet\" type=\"text/css\" href=\"/%s\" />\n" (funcall f-local-css-path y))))
               local-css-list)
 
-        (insert (mon-facebook-comments-plugin-meta-props))
-
         (buffer-string))))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
@@ -1020,6 +1030,31 @@ Put all configurations in the hash-table 'mon-configdb'
         (buffer-string))))
 #+END_SRC
 
+***** Meta-info
+#+BEGIN_SRC emacs-lisp
+  (defun mon-org-html--build-meta-info (oldfun &rest args)
+    (let* ((info (nth 0 args))
+           (pub-dir (plist-get info :publishing-directory))
+           (prefix-dir (mon-genpath (cdr (split-string pub-dir "/"))))
+           (output-file (mon-genpath
+                         (list prefix-dir
+                               (nth 0 (cdr (split-string (plist-get info :output-file) pub-dir))))))
+           (output-file-no-index (cond ((string-match-p "index.html" output-file)
+                                        (if (string= "/index.html" output-file)
+                                            "" (file-name-directory output-file)))
+                                       (t output-file)))
+
+           (facebook-comments-plugin-metadata
+            (mon-facebook-comments-plugin-meta-props
+             output-file-no-index
+             (plist-get info :title)
+             (plist-get info :description) ; TODO: define-capture (ponder: keywords)
+             )))
+
+    (concat (apply oldfun args) facebook-comments-plugin-metadata)))
+  ;; Add advice
+  (advice-add 'org-html--build-meta-info :around #'mon-org-html--build-meta-info)
+#+END_SRC
 *** Sitemaps
 **** ARTICLES
 #+BEGIN_SRC emacs-lisp
