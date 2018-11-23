@@ -1539,6 +1539,47 @@ Please don't hesitate to ask questions or send feedback in the comments.
 ***** COMMENT Disclaimer:
 - The contents are provided "AS IS" basis [experimental and still under development]
 - Should you find any issue with the content, please contact m.mesbah.uddin (at) gmail.com
+**** policy
+***** TODO privacy-policy
+:PROPERTIES:
+:EXPORT_FILE_NAME: STOCK/GRAINS/APEX/policy/privacy-policy.org
+:CUSTOM_ID: 78907087-FFD9-45EE-A8AF-17B524302BCB
+:TITLE:    privacy-policy
+:SUBTITLE:
+:AUTHOR:
+:EMAIL:
+:CREATE_TIMESTAMP: Thu Nov 22 23:34:56 2018
+:STARTUP:
+:KEYWORDS:
+:END:
+#+OPTIONS: toc:nil
+#+begin_takeaway
+
+#+end_takeaway
+#+begin_keywords
+
+#+end_keywords
+
+***** TODO terms-of-service
+:PROPERTIES:
+:EXPORT_FILE_NAME: STOCK/GRAINS/APEX/policy/terms-of-service.org
+:CUSTOM_ID: 62B5A7BA-21D9-4ECB-9687-B4626AE4BB89
+:TITLE:    terms-of-service
+:SUBTITLE:
+:AUTHOR:
+:EMAIL:
+:CREATE_TIMESTAMP: Thu Nov 22 23:47:48 2018
+:STARTUP:
+:KEYWORDS:
+:END:
+#+OPTIONS: toc:nil
+#+begin_takeaway
+
+#+end_takeaway
+#+begin_keywords
+
+#+end_keywords
+
 *** ARTICLES
 *** NOTES
 ** CHUNK
