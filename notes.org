@@ -925,8 +925,14 @@ Put all configurations in the hash-table 'mon-configdb'
            ;;                                  args))))))
            (pub-dir (plist-get info :publishing-directory))
            (prefix-dir (mon-genpath (cdr (split-string pub-dir "/"))))
-           (outfile `((?f . ,(concat prefix-dir ;; (file-name-as-directory prefix-dir) -- do not use "./" as a relative directory
-                                     (file-name-nondirectory (plist-get info :output-file)))))))
+           (output-file (mon-genpath
+                         (list prefix-dir
+                               (nth 0 (cdr (split-string (plist-get info :output-file) pub-dir))))))
+           (output-file-no-index (cond ((string-match-p "index.html" output-file)
+                                        (if (string= "/index.html" output-file)
+                                            "" (file-name-directory output-file)))
+                                       (t output-file)))
+           (outfile `((?f . ,output-file-no-index))))
 
       ;; apply passes arguments separately (spreads the list)
       (append (apply oldfun args) outfile)))
