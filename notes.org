@@ -541,6 +541,7 @@ SOFTWARE.
        author
        email
        fixed-date-time
+       description
        keyword-tags
        startup-option)
 
@@ -553,6 +554,7 @@ SOFTWARE.
   ,#+AUTHOR: %s
   ,#+EMAIL: %s
   ,#+DATE: %s
+  ,#+DESCRIPTIONS: %s
   ,#+KEYWORDS: %s
   ,#+STARTUP: %s\n\n\n"
             (or title "Untitled")
@@ -560,6 +562,7 @@ SOFTWARE.
             (or author "Anonymous")
             email
             (or fixed-date-time (format-time-string "%c" (current-time))) ;; if not previously created, current-time should be good
+            description
             keyword-tags
             (or startup-option "indent")))
 #+END_SRC
@@ -635,6 +638,7 @@ SOFTWARE.
             (this-email (mon-org-custom-property-get "EMAIL"))
             (this-create-timestamp (mon-org-custom-property-get "CREATE_TIMESTAMP"))
             (this-update-timestamp (mon-org-custom-property-get "UPDATE_TIMESTAMP")) ;; (last update provided via postamble) ponder if keeping that information in property drawer will be of use
+            (this-description (concat (mon-org-custom-property-get "DESCRIPTION")))
             (this-keywords (concat (mon-org-custom-property-get "KEYWORDS")))
             (this-startup (mon-org-custom-property-get "STARTUP"))
             )
@@ -651,6 +655,7 @@ SOFTWARE.
                    this-author ;; author
                    this-email ;; email
                    this-create-timestamp ;; fixed-date-time
+                   this-description ;; description
                    this-keywords ;; keyword-tags
                    this-startup ;;startup-option
                    ))
@@ -1553,7 +1558,6 @@ Put all configurations in the hash-table 'mon-configdb'
 :EMAIL:
 :CREATE_TIMESTAMP: Mon Nov 19 01:16:46 2018
 :STARTUP:
-:KEYWORDS:
 :END:
 #+OPTIONS: title:nil toc:nil num:nil
 #+begin_takeaway
