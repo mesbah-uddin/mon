@@ -554,7 +554,7 @@ SOFTWARE.
   ,#+AUTHOR: %s
   ,#+EMAIL: %s
   ,#+DATE: %s
-  ,#+DESCRIPTIONS: %s
+  ,#+DESCRIPTION: %s
   ,#+KEYWORDS: %s
   ,#+STARTUP: %s\n\n\n"
             (or title "Untitled")
