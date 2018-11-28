@@ -464,6 +464,20 @@ SOFTWARE.
           (org-set-property "KEYWORDS" (or keywords "")))) ;; now, just a placeholder
       (widen)))
 #+END_SRC
+**** DESCRIPTION
+#+BEGIN_SRC emacs-lisp
+  (defun mon-org-custom-description-create (&optional descriptions)
+    (interactive)
+
+    (save-excursion
+      (org-back-to-heading)
+      (org-narrow-to-subtree)
+
+      (let ((title (mon-org-custom-property-get "DESCRIPTION")))
+        (unless title
+          (org-set-property "DESCRIPTION" (or descriptions "")))) ;; now, just a placeholder
+      (widen)))
+#+END_SRC
 **** STARTUP OPTIONS
 #+BEGIN_SRC emacs-lisp
   (defun mon-org-custom-startup-options-create ()
@@ -481,59 +495,42 @@ SOFTWARE.
 ** Parse contents
 *** Retrieve takeaway and keywords
 #+BEGIN_SRC emacs-lisp
-  (defun mon-search-matched-region (regexp-pat &optional delete-flag buffer)
-    (save-excursion
-      (with-current-buffer (or buffer (current-buffer))
-
-        (goto-char (point-min))
-
-        (while (re-search-forward regexp-pat nil t)
-          (setq found-matched-string (buffer-substring (match-beginning 0) (match-end 0)))
-          (if delete-flag
-              (delete-region (match-beginning 0) (match-end 0))))))
-
-    (cons (match-beginning 0) found-matched-string))
-#+END_SRC
-#+BEGIN_SRC emacs-lisp
-  (defun mon-search-keywords-region (&optional delete-flag buffer)
+  (defun mon-remove-special-region (region-name)
     (interactive)
 
-    (mon-search-matched-region
-     "#\\+begin_keywords[ \t\n]*\\(.*[ \t\n]*\\)#\\+end_keywords"
-     delete-flag
-     buffer))
+    (let ((beg (progn (re-search-backward (concat "#\\+\\<+begin_" region-name "\\>"))
+                      (match-beginning 0)))
+          (end (progn (re-search-forward (concat "#\\+\\<+end_" region-name "\\>"))
+                      (match-end 0))))
+      (delete-region beg end)))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
-  (defun mon-retrieve-keywords-contents-only (&optional delete-flag)
+  (defun mon-retrieve-contents-from-special-region (&optional region-name delete-flag)
     (interactive)
 
-    (let ((region-str (mon-search-keywords-region delete-flag)))
-      (replace-regexp-in-string
-       "#\\+begin_keywords[ \t\n]*\\(.*[ \t\n]*\\)#\\+end_keywords"
-       "\\1"
-       (cdr region-str))))
-#+END_SRC
-#+BEGIN_SRC emacs-lisp
-  (defun mon-search-takeaway-region (&optional delete-flag buffer)
-    (interactive)
-    (mon-search-matched-region
-     "#\\+begin_takeaway\\([ \t\n].*\\)*[ \t\n]*#\\+end_takeaway"
-     delete-flag
-     buffer))
-#+END_SRC
-#+BEGIN_SRC emacs-lisp
-  (defun mon-retrieve-takeaway-contents-only (&optional delete-flag)
-    (interactive)
-    (let ((region-str (mon-search-takeaway-region delete-flag)))
+    (let ((beg (+ 1 (re-search-forward (concat "#\\+\\<+begin_" region-name "\\>"))))
+          (end (progn (re-search-forward (concat "#\\+\\<+end_" region-name "\\>"))
+                      (match-beginning 0))))
+      (let ((retrieved-content (buffer-substring beg end)))
+        (if delete-flag
+            (mon-remove-special-region region-name))
+        retrieved-content)))
 
-      (replace-regexp-in-string
-       "#\\+end_takeaway$"
-       ""
-       (replace-regexp-in-string
-        "#\\+begin_takeaway[ \t\n]*"
-        ""
-        (cdr region-str)))))
 #+END_SRC
+#+BEGIN_SRC emacs-lisp
+    (defun mon-retrieve-contents-from-special-blocks-keywords (&optional delete-flag)
+      (interactive)
+
+      (mon-retrieve-contents-from-special-region "keywords"  delete-flag))
+
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+    (defun mon-retrieve-contents-from-special-blocks-takeaway (&optional delete-flag)
+      (interactive)
+
+      (mon-retrieve-contents-from-special-region "takeaway"  delete-flag))
+#+END_SRC
+
 ** Refile a subtree from this note
 *** File-local variables
 #+BEGIN_SRC emacs-lisp
@@ -616,8 +613,17 @@ SOFTWARE.
       (org-narrow-to-subtree)
       (org-back-to-heading)
 
+      (mon-org-custom-description-create
+       (replace-regexp-in-string
+        "[ \t\n]+" " -EOL- "
+        (mon-retrieve-contents-from-special-blocks-takeaway
+         del-keywords-block)))
+
       (mon-org-custom-keywords-create
-       (replace-regexp-in-string "[ \t\n]*" "" (mon-retrieve-keywords-contents-only del-keywords-block)))
+       (replace-regexp-in-string
+        "[ \t\n]*" " -EOL- "
+        (mon-retrieve-contents-from-special-blocks-keywords
+         del-keywords-block)))
 
       (let ((org-yank-adjusted-subtrees t)
             (target-filename
