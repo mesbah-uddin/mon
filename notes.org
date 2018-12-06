@@ -2190,26 +2190,8 @@ Please don't hesitate to ask questions or send feedback in the comments.
 
   footer {
       margin-bottom: 2rem;
-  }
-
-  /* -- comments/feedback region -- */
-  .feedback {
-      width: 100%;
-      float: left;
-      font-family: Arial, Helvetica, sans-serif;
       color: var(--default-body-color);
       background-color: var(--default-body-bg);
-  }
-  .feedback a {
-      color: var(--default-orange);
-  }
-  .fb-comments, .fb-comments span, .fb-comments iframe {
-      min-width: 100% !important;
-      max-width: 100% !important;
-  }
-  .fb-comments a, .fb-comments span a, .fb-comments iframe a {
-      color: var(--default-orange) !important;
-
   }
 #+END_SRC
 
@@ -2277,96 +2259,190 @@ Please don't hesitate to ask questions or send feedback in the comments.
 
 <<posts>>
 #+BEGIN_SRC css
-    /* Posts and pages
-     ,*
-     ,* Each post is wrapped in `.post` and is used on default and post layouts. Each
-     ,* page is wrapped in `.page` and is only used on the page layout.
-     ,*/
+  /* Posts and pages
+    ,*
+    ,* Each post is wrapped in `.post` and is used on default and post layouts. Each
+    ,* page is wrapped in `.page` and is only used on the page layout.
+    ,*/
 
-    .journey h1 {
-        font-size: 1.5rem;
-    }
-
-    .harbor,
-    .jaunt,
-    .page,
-    .post {
-        margin-bottom: 4em;
-    }
-    .page li + li,
-    .post li + li {
-        margin-top: .25rem;
-    }
-
-    .wrap-up {
-        padding: 0;
-        margin: 0;
-        margin-bottom: 0;
-    }
-    .wrap-up span {
-        display: inline-block;
-    }
-   .wrap-up p {
-       margin-top: 0;
-       margin-bottom: 0;
+   .journey h1 {
+       font-size: 1.5rem;
    }
 
-    /* Blog post or page title */
-    .course-title,
-    .cruise-headline,
-    .cruise-headline a,
-    .page-title,
-    .post-title,
-    .post-title a {
-        color: #303030;
-    }
-    .course-title,
-    .cruise-headline,
-    .page-title,
-    .post-title {
-        margin-top: 0;
-    }
+   .harbor,
+   .jaunt,
+   .page,
+   .post {
+       margin-bottom: 4em;
+   }
+   .page li + li,
+   .post li + li {
+       margin-top: .25rem;
+   }
 
-    /* Meta data line below post title */
-    .cruise-date,
-    .post-date {
-        display: block;
-        margin-top: -.5rem;
-        margin-bottom: 1rem;
-        color: #9a9a9a;
-    }
+   .wrap-up {
+       padding: 0;
+       margin: 0;
+       margin-bottom: 0;
+   }
+   .wrap-up span {
+       display: inline-block;
+   }
+  .wrap-up p {
+      margin-top: 0;
+      margin-bottom: 0;
+  }
 
+   /* Blog post or page title */
+   .course-title,
+   .cruise-headline,
+   .cruise-headline a,
+   .page-title,
+   .post-title,
+   .post-title a {
+       color: #303030;
+   }
+   .course-title,
+   .cruise-headline,
+   .page-title,
+   .post-title {
+       margin-top: 0;
+   }
 
+   /* Meta data line below post title */
+   .cruise-date,
+   .post-date {
+       display: block;
+       margin-top: -.5rem;
+       margin-bottom: 1rem;
+       color: #9a9a9a;
+   }
 
-    /* Related posts */
-    .related {
-        padding-top: 2rem;
-        padding-bottom: 2rem;
-        margin-bottom: 2rem;
-        border-top: 1px solid #eee;
-        border-bottom: 1px solid #eee;
-    }
+#+END_SRC
 
-    .related-posts {
-        padding-left: 0;
-        list-style: none;
-    }
-    .related-posts h3 {
-        margin-top: 0;
-    }
-    .related-posts li {
-    }
-    .related-posts li small {
-        font-size: 75%;
-        color: #999;
-    }
-    .related-posts li a:hover {
-        color: #268bd2;
-        text-decoration: none;
-    }
-    .related-posts li a:hover small {
-        color: inherit;
-    }
+<<comments-and-tags>>
+#+BEGIN_SRC css
+  /* Tags */
+  @media (min-width: 30em) {
+      .anchor-tags {
+          float: right;
+      }
+  }
+
+  /* -- comments/feedback region -- */
+  .follow-me-twitter,
+  .follow-me-github {
+      height: 28px;
+      width: 157px;
+      margin: 0.5em 0;
+  }
+
+  /*.gad {
+    width: 100%;
+    height: 100px;
+  }
+  ,*/
+
+  .stern {
+      position:absolute;
+      bottom:3rem;
+  }
+
+  .se-flair {
+      padding: 0;
+      margin: 0;
+  }
+  .pay-me-gratipay {
+      margin: 0.5em 0;
+  }
+  .pay-me-gratipay img {
+      height: 26.5px;
+      padding: 0;
+      margin: 0;
+  }
+
+  /**/
+  .stern-x {
+      absolute;
+      bottom: 1rem;
+  }
+
+  .share-me {
+      //width: 60%;
+      //float:left;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--default-body-color);
+      background-color: var(--default-body-bg);
+  }
+  .share-me a:hover {
+      text-decoration: none;
+      color: white;
+  }
+  .gecko {
+      //width: 100%;
+      //float: right;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--default-body-color);
+      background-color: var(--default-body-bg);
+  }
+  .selfie {
+      width: 100%;
+      float: center;//left;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--default-body-color);
+      background-color: #f0f0f0;//var(--default-body-bg);
+  }
+  .feedback {
+      width: 100%;
+      float: left;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--default-body-color);
+      background-color: var(--default-body-bg);
+  }
+  .feedback a {
+      color: var(--default-orange);
+  }
+  .fb-comments, .fb-comments span, .fb-comments iframe {
+      min-width: 100% !important;
+      max-width: 100% !important;
+  }
+  .fb-comments a, .fb-comments span a, .fb-comments iframe a {
+      color: var(--default-orange) !important;
+
+  }
+#+END_SRC
+
+<<related-posts>>
+#+BEGIN_SRC css
+  /* Related posts */
+  .related {
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+      margin-bottom: 2rem;
+      border-top: 1px solid #eee;
+      border-bottom: 1px solid #eee;
+  }
+
+  .related-posts {
+      padding-left: 0;
+      list-style: none;
+  }
+  .related-posts h3 {
+      margin-top: 0;
+  }
+  .related-posts li {
+  }
+  .related-posts li small {
+      font-size: 75%;
+      color: #999;
+  }
+  .related-posts li a:hover {
+      color: #268bd2;
+      text-decoration: none;
+  }
+  .related-posts li a:hover small {
+      color: inherit;
+  }
 #+END_SRC
 
 <<pagination>>
