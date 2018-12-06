@@ -238,10 +238,12 @@ SOFTWARE.
     (interactive)
     (let ((nodes
            (mon-list-files
-            "/Volumes/mu/git/mon_m/stock/grains/notes/"
+            (mon-base-directory nil "notes") ;;"/Volumes/mu/git/mon_m/stock/grains/notes/"
             "\.org$"
             nil))
-          (dest-file (or archive-dest-file "/Volumes/mu/git/mon_m/stock/grains/notes/archive-simple.org"))
+          (dest-file (or archive-dest-file
+                         (concat (file-name-directory (mon-base-directory nil "notes"))
+                                 "archive-simple.org")))
           )
 
       (with-temp-buffer
@@ -260,7 +262,7 @@ SOFTWARE.
     (interactive)
     (let ((nodes
            (mon-list-files
-            "/Volumes/mu/git/mon_m/stock/grains/notes/"
+            (mon-base-directory nil "notes") ;;"/Volumes/mu/git/mon_m/stock/grains/notes/"
             "\.org$"
             t))
           (f-print (lambda (x)
@@ -268,9 +270,10 @@ SOFTWARE.
                        (message (format "%s %s" (car (car nodes)) (cdr (car nodes))))
                        (setq nodes (cdr nodes)))
                      ))
-          (dest-file (or archive-dest-file "/Volumes/mu/git/mon_m/stock/grains/notes/archive-taglinks.org"))
+          (dest-file (or archive-dest-file
+                         (concat (file-name-directory (mon-base-directory nil "notes"))
+                                 "archive-taglinks.org")))
           )
-
 
       (with-temp-buffer
         ;; DEBUG-DISPLAY
@@ -284,9 +287,10 @@ SOFTWARE.
                             'identity
                             (cl-loop for y in (alist-get (car (car nodes)) nodes)
                                      collect (format "\n<li><span class=\"archive-date\">%s</span> -- <a href=\"%s\">%s</a></li>"
-                                                     (or (car y) "SOMEDAY")
-                                                     (car (cdr y))
-                                                     (car (cdr y))))
+                                                     (or (nth 2 y) "SOMEDAY")
+                                                     (nth 0 y)
+                                                     (nth 1 y)
+                                                     ))
                                       "")
                            ))
           (setq nodes (cdr nodes)))
@@ -301,12 +305,18 @@ SOFTWARE.
 
       (mapc (lambda (x)
               (if extended
-                  (cl-loop for y in (split-string (mapconcat 'identity (funcall f-get-prop x :select-tags) "") ",")
+                  (cl-loop for y in (split-string (mapconcat 'identity (funcall f-get-prop x "SELECT_TAGS") "") ",")
                            collect (setq nodes (mon-local-accumulate-elements y nodes)))
                 (setq nodes
                       (append nodes
-                              (list (cons (car (funcall f-get-prop x :date))
-                                          (funcall f-get-prop x :title)))))))
+                              (list (list (replace-regexp-in-string
+                                           ".org$"
+                                           ".html"
+                                           (file-relative-name
+                                            (or (car (funcall f-get-prop x "FILE_NAME")) x)
+                                            (mon-base-directory nil "notes")))
+                                          (car (funcall f-get-prop x "TITLE"))
+                                          (car (funcall f-get-prop x "DATE"))))))))
             (directory-files-recursively directory regexp-pat))
 
       nodes))
@@ -318,9 +328,14 @@ SOFTWARE.
 
       (setf (alist-get (intern y) alist) ;; update elements in the list
             (append (alist-get (intern y) alist)
-                    (list (cons (car (funcall f-get-prop x :date))
-                                (funcall f-get-prop x :title)))))
-
+                    (list (list (replace-regexp-in-string
+                                 ".org$"
+                                 ".html"
+                                 (file-relative-name
+                                  (or (car (funcall f-get-prop x "FILE_NAME")) x)
+                                  (mon-base-directory nil "notes")))
+                                (car (funcall f-get-prop x "TITLE"))
+                                (car (funcall f-get-prop x "DATE"))))))
       alist))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
@@ -331,8 +346,29 @@ SOFTWARE.
       (insert-file-contents file nil nil nil t)
       (org-mode)
       (goto-char (point-min))
-      (message (format "\nENV: %S" (org-export-get-environment)))
-      (plist-get (org-export-get-environment) props)))
+      ;;(plist-get (org-export-get-environment) props)
+
+      ;;(message (format "\n\n\n\n\n***** ***** FILE=%s file=%s"
+      ;;                 (replace-regexp-in-string
+      ;;                  ".org$"
+      ;;                  ".html"
+      ;;                  (file-relative-name
+      ;;                   file;;(file-name-directory file) ;; such as "stock/grains/articles/a.org"
+      ;;                   (mon-base-directory))) ;;(mon-base-directory nil "notes")))
+      ;;                 file))
+
+      (let* ((parse-tree (org-element-parse-buffer))
+             (f-parse-for-keyword
+              (lambda (props)
+                (org-element-map parse-tree 'keyword
+                  (lambda (element) (when (string-match props
+                                                        (org-element-property :key element))
+                                      ;;element
+                                      (org-element-property :value element)
+                                      ))))))
+
+        (funcall f-parse-for-keyword props))
+      ))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
 
