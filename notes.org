@@ -1011,7 +1011,8 @@ Put all configurations in the hash-table 'mon-configdb'
             "%K" ;; anchor-tags
 
             (mon-share-me "twitter" "facebook" "google+")
-            (mon-facebook-comments-plugin-editor)))
+            (mon-facebook-comments-plugin-editor)
+            (mon-copyright "content" "icons")))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (defun mon-share-me (&optional $twitter $facebook $google+)
@@ -1061,6 +1062,15 @@ Put all configurations in the hash-table 'mon-configdb'
 
       </div>"
         ))
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-copyright (&optional $content $icons)
+    "
+  <div class=\"footer\">
+    <p>Content &copy; 2018, All rights reserved.
+    </p>
+  </div>"
+    )
 #+END_SRC
 **** Preamble
 #+BEGIN_SRC emacs-lisp
