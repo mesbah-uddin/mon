@@ -1006,7 +1006,7 @@ Put all configurations in the hash-table 'mon-configdb'
 #+BEGIN_SRC emacs-lisp
   (defun mon-html-postamble (&optional init-theme)
     (concat
-     (mon-last-update)
+     ;;(mon-last-update)
 
      "%K" ;; anchor-tags
 
