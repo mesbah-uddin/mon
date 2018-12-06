@@ -947,27 +947,69 @@ Put all configurations in the hash-table 'mon-configdb'
            (description-text (with-temp-buffer
                                (insert (or (plist-get info :description) ""))
                                (goto-char (point-min))
-                               (while (re-search-forward " -EOL-" nil t)
+                               (while (re-search-forward "-EOL-" nil t)
                                  (replace-match "\n"))
                                (buffer-string)))
            (summary-format `((?S . ,description-text)))
-           )
-
+           (keywords-text (with-temp-buffer
+                            (insert (or (plist-get info :keywords) ""))
+                               (goto-char (point-min))
+                               (while (re-search-forward "-EOL-" nil t)
+                                 (replace-match "\n"))
+                               (buffer-string)))
+           (keywords-format `((?K . ,(mon-tags-keywords keywords-text)))))
 
 
       ;; apply passes arguments separately (spreads the list)
-      (append (apply oldfun args) outfile summary-format)))
+      (append (apply oldfun args) outfile summary-format keywords-format)))
 
 
 
   ;; Add advice
   (advice-add 'org-html-format-spec :around #'mon-add-org-html-format-spec)
 #+END_SRC
+#+BEGIN_SRC emacs-lisp
+    (defun mon-chomp (str)
+      (replace-regexp-in-string
+       "[ \t\n]*$"
+       ""
+       (replace-regexp-in-string "^[ \t\n]*" "" str)))
+
+    (defun mon-tags-keywords (&optional tags-csv)
+      (let* ((my-tags (split-string tags-csv ","))
+             (my-tags-string (mapconcat 'identity my-tags  ""))
+              (f-tag-span (lambda (x)
+                            (let ((sanitized-x (mon-chomp x)))
+                              (message (format "\nX-IN-LAMBDA=%S" sanitized-x))
+                              (format
+                               "
+          <span class=\"tag\">
+            <a href=\"/archive-taglinks.html#%s\"
+               onclick=\"javascript:ga('send', 'event', 'Tag', 'Click', '%s Click');\">
+               %s
+            </a>
+          </span>"
+                               sanitized-x
+                               sanitized-x
+                               sanitized-x)))))
+
+  (if (not (string= "" my-tags-string))
+      (concat "<div class=\"anchor-tags\">\nTags: "
+              (mapconcat
+               'identity
+               (cl-loop for x in my-tags by #'cddr collect (funcall f-tag-span x))
+               "\t")
+              "\n</div>")
+    "")))
+#+END_SRC
 
 #+BEGIN_SRC emacs-lisp
   (defun mon-html-postamble (&optional init-theme)
     (concat "<p>Last update: <span class=\"date\">%C</span></p>"
             "\n"
+
+            "%K" ;; anchor-tags
+
             (mon-share-me "twitter" "facebook" "google+")
             (mon-facebook-comments-plugin-editor)))
 #+END_SRC
