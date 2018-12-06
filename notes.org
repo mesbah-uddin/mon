@@ -234,22 +234,29 @@ SOFTWARE.
 #+END_SRC
 *** Archive list with taglinks
 #+BEGIN_SRC emacs-lisp
-  (defun mon-list-files-simple ()
+  (defun mon-list-files-simple (&optional archive-dest-file)
     (interactive)
     (let ((nodes
            (mon-list-files
             "/Volumes/mu/git/mon_m/stock/grains/notes/"
             "\.org$"
-            nil)))
+            nil))
+          (dest-file (or archive-dest-file "/Volumes/mu/git/mon_m/stock/grains/notes/archive-simple.org"))
+          )
 
-      ;; DEBUG-DISPLAY
-      (while nodes
-        (message (format "\n LIST: D=%s Ti=%s" (car (car nodes)) (cdr (car nodes))))
-        (setq nodes (cdr nodes)))
+      (with-temp-buffer
+        ;; DEBUG-DISPLAY
+        (while nodes
+          (insert (format "\n LIST: D=%s -- [[%s][%s]]"
+                          (car (car nodes))
+                          "http://localhost:8000/notes/archive-simple.html" ;;(car (cdr (car nodes)))
+                          (car (cdr (car nodes)))))
+          (setq nodes (cdr nodes)))
+        (write-region (buffer-substring-no-properties (point-min) (point-max)) nil dest-file))
       ))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
-  (defun mon-list-files-extended ()
+  (defun mon-list-files-extended (&optional archive-dest-file)
     (interactive)
     (let ((nodes
            (mon-list-files
@@ -261,22 +268,29 @@ SOFTWARE.
                        (message (format "%s %s" (car (car nodes)) (cdr (car nodes))))
                        (setq nodes (cdr nodes)))
                      ))
+          (dest-file (or archive-dest-file "/Volumes/mu/git/mon_m/stock/grains/notes/archive-taglinks.org"))
           )
 
-      ;; DEBUG-DISPLAY
-      ;;(message (format "\n LIST: %s" nodes))
-      ;;(message (format "\n LIST-alist-get: %s" (alist-get (intern "xx") nodes)))
-      (while nodes
-        (message (format "\nLIST:\nkey=%s\nvalue=%s\n%s"
-                         (car (car nodes))
-                         (alist-get (car (car nodes)) nodes)
-                         (mapconcat 'identity
-                                    (cl-loop for y in (alist-get (car (car nodes)) nodes)
-                                             collect (message (format "\n<TEST>%s\n%s" (car y) (car (cdr y))))
-                                             )
-                                    "")
-                         ))
-        (setq nodes (cdr nodes)))
+
+      (with-temp-buffer
+        ;; DEBUG-DISPLAY
+        ;;(message (format "\n LIST: %s" nodes))
+        ;;(message (format "\n LIST-alist-get: %s" (alist-get (intern "xx") nodes)))
+        (while nodes
+          (insert (format "\n<h3 id=\"%s\">%s</h3>\n<ul class=\"archive\">%s\n</ul>"
+                           (car (car nodes))
+                           (car (car nodes))
+                           (mapconcat
+                            'identity
+                            (cl-loop for y in (alist-get (car (car nodes)) nodes)
+                                     collect (format "\n<li><span class=\"archive-date\">%s</span> -- <a href=\"%s\">%s</a></li>"
+                                                     (or (car y) "SOMEDAY")
+                                                     (car (cdr y))
+                                                     (car (cdr y))))
+                                      "")
+                           ))
+          (setq nodes (cdr nodes)))
+        (write-region (buffer-substring-no-properties (point-min) (point-max)) nil dest-file))
       ))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
@@ -317,6 +331,7 @@ SOFTWARE.
       (insert-file-contents file nil nil nil t)
       (org-mode)
       (goto-char (point-min))
+      (message (format "\nENV: %S" (org-export-get-environment)))
       (plist-get (org-export-get-environment) props)))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
@@ -1073,7 +1088,7 @@ Put all configurations in the hash-table 'mon-configdb'
                               (format
                                "
           <span class=\"tag\">
-            <a href=\"/archive-taglinks.html#%s\"
+            <a href=\"/notes/archive-taglinks.html#%s\"
                onclick=\"javascript:ga('send', 'event', 'Tag', 'Click', '%s Click');\">
                %s
             </a>
@@ -1091,7 +1106,6 @@ Put all configurations in the hash-table 'mon-configdb'
               "\n</div>")
     "")))
 #+END_SRC
-
 #+BEGIN_SRC emacs-lisp
   (defun mon-html-postamble (&optional init-theme)
     (concat
@@ -1325,31 +1339,31 @@ Put all configurations in the hash-table 'mon-configdb'
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (defun mon-format-entry-article (entry style project)
-      (when (not (directory-name-p entry))
+    (when (not (directory-name-p entry))
 
-        (let* ((f-link (lambda (x) (plist-get (nth 1 x) :raw-link)))
-               (f-name (lambda (x) (nth 2 x)))
-               (f-name-and-link (lambda (x)
-                                  (progn (format "\n  [[%s][%s]]"
-                                                 (funcall f-link x)
-                                                 (funcall f-name x)))))
-               (author-property (org-publish-find-property entry :author project))
-               (author-and-link
-                (cond ((null author-property) "Anonymous")
-                      ((atom author-property) author-property)
-                      ((consp (car author-property))
-                       (mapconcat
-                        'identity
-                        (cl-loop for x in author-property by #'cddr collect (funcall f-name-and-link x))
-                        ", ")))))
-               ;;(author-and-link
-               ;; (cond ((null author-property) "Anonymous")
-               ;;       ((atom author-property) author-property)
-               ;;       (t (format "[[%s][%s]]"
-               ;;                  (plist-get (nth 1 author-property) :raw-link)
+      (let* ((f-link (lambda (x) (plist-get (nth 1 x) :raw-link)))
+             (f-name (lambda (x) (nth 2 x)))
+             (f-name-and-link (lambda (x)
+                                (progn (format "\n  [[%s][%s]]"
+                                               (funcall f-link x)
+                                               (funcall f-name x)))))
+             (author-property (org-publish-find-property entry :author project))
+             (author-and-link
+              (cond ((null author-property) "Anonymous")
+                    ((atom author-property) author-property)
+                    ((consp (car author-property))
+                     (mapconcat
+                      'identity
+                      (cl-loop for x in author-property by #'cddr collect (funcall f-name-and-link x))
+                      ", ")))))
+        ;;(author-and-link
+        ;; (cond ((null author-property) "Anonymous")
+        ;;       ((atom author-property) author-property)
+        ;;       (t (format "[[%s][%s]]"
+        ;;                  (plist-get (nth 1 author-property) :raw-link)
 
-          (concat
-           (format "
+        (concat
+         (format "
         [[file:%s][%s]]
         ,#+begin_wrap-up
         <h1 class=\"cruise-headline\">[[file:%s][%s]]</h1>
@@ -1359,19 +1373,19 @@ Put all configurations in the hash-table 'mon-configdb'
         <hr />
         ,#+end_wrap-up
         "
-                   "DUMMY";;entry
-                   "DUMMY";;(org-publish-find-title entry project)
-                   ;;
-                   entry
-                   (org-publish-find-title entry project)
-                   ;;
-                   (format-time-string "%B %e, %Y" (org-publish-find-date entry project))
-                   ;;
-                   (if author-and-link
-                       (format "  by\n <span class=\"cruise-crew\"> %s\n </span>" author-and-link)
-                     "")
-                   entry
-                   entry)))))
+                 "DUMMY";;entry
+                 "DUMMY";;(org-publish-find-title entry project)
+                 ;;
+                 entry
+                 (org-publish-find-title entry project)
+                 ;;
+                 (format-time-string "%B %e, %Y" (org-publish-find-date entry project))
+                 ;;
+                 (if author-and-link
+                     (format "  by\n <span class=\"cruise-crew\"> %s\n </span>" author-and-link)
+                   "")
+                 entry
+                 entry)))))
  #+END_SRC
 
 *** Backend
@@ -1472,8 +1486,9 @@ Put all configurations in the hash-table 'mon-configdb'
            (block-data-1 (mon-local-filter-embed-layers-in-contents-div div-name block-data backend info))
            (block-data-2 (mon-local-filter-remove-sitemap-entry-auto-headlines block-data-1 backend info))
            (block-data-3 (mon-local-filter-embed-layers-after-body block-data-2 backend info))
-           (block-data-4 (mon-local-filter-rename-head-title-to-unique block-data-3 backend info)))
-      (setq block-data block-data-4)))
+           (block-data-4 (mon-local-filter-rename-head-title-to-unique block-data-3 backend info))
+           (block-data-5 (mon-sanitize-html-symbols block-data-4 backend info)))
+      (setq block-data block-data-5)))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (defun mon-local-filter-final-output-layout-page (block-data backend info)
@@ -1481,8 +1496,9 @@ Put all configurations in the hash-table 'mon-configdb'
            (block-data-1 (mon-local-filter-embed-layers-in-contents-div div-name block-data backend info))
            (block-data-2 (mon-local-filter-embed-layers-after-body block-data-1 backend info))
            (block-data-3 (mon-local-filter-rename-heading-class-no-author block-data-2 backend info))
-           (block-data-4 (mon-local-filter-rename-head-title-to-unique block-data-3 backend info)))
-      (setq block-data block-data-4)))
+           (block-data-4 (mon-local-filter-rename-head-title-to-unique block-data-3 backend info))
+           (block-data-5 (mon-sanitize-html-symbols block-data-4 backend info)))
+      (setq block-data block-data-5)))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (defun mon-local-filter-final-output-blog-nonindex (block-data backend info)
@@ -1490,8 +1506,9 @@ Put all configurations in the hash-table 'mon-configdb'
            (block-data-1 (mon-local-filter-embed-layers-in-contents-div div-name block-data backend info))
            (block-data-2 (mon-local-filter-embed-layers-after-body block-data-1 backend info))
            (block-data-3 (mon-local-filter-rename-heading-class block-data-2 backend info))
-           (block-data-4 (mon-local-filter-rename-head-title-to-unique block-data-3 backend info)))
-      (setq block-data block-data-4)))
+           (block-data-4 (mon-local-filter-rename-head-title-to-unique block-data-3 backend info))
+           (block-data-5 (mon-sanitize-html-symbols block-data-4 backend info)))
+      (setq block-data block-data-5)))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (defun mon-local-filter-embed-layers-in-contents-div (div-name block-data backend info)
@@ -1577,7 +1594,15 @@ Put all configurations in the hash-table 'mon-configdb'
             block-data)))
       block-data-1))
 #+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-sanitize-html-symbols (block-data backend info &optional alist)
+    (let* ((block-data-< (replace-regexp-in-string  "&lt;" "<" block-data))
+           (block-data-> (replace-regexp-in-string  "&gt;" ">" block-data-<))
+           )
 
+      block-data->
+      ))
+#+END_SRC
 ***** Add author section right after title
 #+BEGIN_SRC emacs-lisp
   (defun mon-local-filter-authors-list (info)
@@ -1630,6 +1655,7 @@ Put all configurations in the hash-table 'mon-configdb'
                                   (mon-publish-alist-name nil "-top") ;; default
                                   ;;-----
                                   (mon-publish-alist-name nil "notes")
+                                  (mon-publish-alist-name nil "notes-archive")
                                   )))
 #+END_SRC
 
@@ -1731,6 +1757,7 @@ Put all configurations in the hash-table 'mon-configdb'
                      :publishing-directory (mon-publishing-directory nil "notes")
                      :publishing-function 'org-html-publish-to-html
                      :recursive t
+                     :exclude (regexp-opt (list "archive-simple.org" "archive-taglinks.org"))
 
 
                      :html-postamble (mon-html-postamble)
@@ -1752,6 +1779,39 @@ Put all configurations in the hash-table 'mon-configdb'
                      :sitemap-format-entry 'mon-format-entry-article
                      ;;
                      :sitemap-style 'list
+                     :with-tags nil
+                     ))
+#+END_SRC
+**** NOTES-ARCHIVE
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'org-publish-project-alist
+               (list (mon-publish-alist-name nil "notes-archive")
+                     :base-directory (mon-base-directory nil "notes")
+
+                     :publishing-directory (mon-publishing-directory nil "notes")
+                     :publishing-function 'org-html-publish-to-html
+                     :recursive nil
+                     :exclude (regexp-opt (list "index.org"))
+
+                     :html-postamble (mon-html-postamble)
+                     :html-preamble (mon-html-preamble
+                                     "apex"
+                                     (mon-theme-name)
+                                     (mon-theme-attributes :mainsail) ;; mainsail/headline @ args: ship-structure
+                                     (mon-theme-attributes :headsail)) ;; headsail/headline @ args: ship-structure
+
+                     :html-head-include-default-style nil ;; Disable default css style
+                     :html-head-include-scripts nil ;; Disable default javascript
+                     :html-head (mon-html-head)
+
+
+                     :auto-sitemap nil
+                     ;;:sitemap-filename "index.org"
+                     ;;:sitemap-function 'mon-sitemap-function-article
+                     ;;:sitemap-sort-files 'anti-chronologically
+                     ;;:sitemap-format-entry 'mon-format-entry-article
+                     ;;;;
+                     ;;:sitemap-style 'list
                      :with-tags nil
                      ))
 #+END_SRC
