@@ -1005,14 +1005,14 @@ Put all configurations in the hash-table 'mon-configdb'
 
 #+BEGIN_SRC emacs-lisp
   (defun mon-html-postamble (&optional init-theme)
-    (concat "<p>Last update: <span class=\"date\">%C</span></p>"
-            "\n"
+    (concat
+     (mon-last-update)
 
-            "%K" ;; anchor-tags
+     "%K" ;; anchor-tags
 
-            (mon-share-me "twitter" "facebook" "google+")
-            (mon-facebook-comments-plugin-editor)
-            (mon-copyright "content" "icons")))
+     (mon-share-me "twitter" "facebook" "google+")
+     (mon-facebook-comments-plugin-editor)
+     (mon-copyright "content" "icons")))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (defun mon-share-me (&optional $twitter $facebook $google+)
@@ -1062,6 +1062,11 @@ Put all configurations in the hash-table 'mon-configdb'
 
       </div>"
         ))
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-last-update ()
+    "<p>Last update: <span class=\"date\">%C</span></p>"
+    )
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (defun mon-copyright (&optional $content $icons)
