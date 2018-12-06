@@ -943,10 +943,22 @@ Put all configurations in the hash-table 'mon-configdb'
                                         (if (string= "/index.html" output-file)
                                             "" (file-name-directory output-file)))
                                        (t output-file)))
-           (outfile `((?f . ,output-file-no-index))))
+           (outfile `((?f . ,output-file-no-index)))
+           (description-text (with-temp-buffer
+                               (insert (or (plist-get info :description) ""))
+                               (goto-char (point-min))
+                               (while (re-search-forward " -EOL-" nil t)
+                                 (replace-match "\n"))
+                               (buffer-string)))
+           (summary-format `((?S . ,description-text)))
+           )
+
+
 
       ;; apply passes arguments separately (spreads the list)
-      (append (apply oldfun args) outfile)))
+      (append (apply oldfun args) outfile summary-format)))
+
+
 
   ;; Add advice
   (advice-add 'org-html-format-spec :around #'mon-add-org-html-format-spec)
@@ -956,7 +968,57 @@ Put all configurations in the hash-table 'mon-configdb'
   (defun mon-html-postamble (&optional init-theme)
     (concat "<p>Last update: <span class=\"date\">%C</span></p>"
             "\n"
+            (mon-share-me "twitter" "facebook" "google+")
             (mon-facebook-comments-plugin-editor)))
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-share-me (&optional $twitter $facebook $google+)
+    (format "
+  <div class=\"share-me\">
+
+  <a href=\"https://twitter.com/intent/tweet?via=@MesbahUddin&hashtags=%%t&text=%%S&url=https://mesbah-uddin.github.io/%%f\"
+         title=\"\"
+         onclick=\"javascript:ga('send', 'event', 'Button', 'Click', 'Twitter Share');\"
+         target=\"_blank\">
+         <i class=\"fab fa-twitter-square fa-2x\"></i>
+      </a>
+
+      <a href=\"https://www.facebook.com/sharer.php?u=https://mesbah-uddin.github.io/%%f\"
+         title=\"\"
+         onclick=\"javascript:ga('send', 'event', 'Button', 'Click', 'Facebook Share');\"
+         target=\"_blank\">
+         <i class=\"fab fa-facebook-square fa-2x\"></i>
+      </a>
+
+      <a href=\"https://plus.google.com/share?url=https://mesbah-uddin.github.io/%%f\"
+         title=\"\"
+         onclick=\"javascript:ga('send', 'event', 'Button', 'Click', 'Google Plus Share');\"
+         target=\"_blank\">
+         <i class=\"fab fa-google-plus-square fa-2x\"></i>
+      </a>
+
+
+      <a href=\"https://www.linkedin.com/shareArticle?mini=true&url=https://mesbah-uddin.github.io/%%f\"
+         &summary=%%S&source=LinkedIn
+         title=\"\"
+         onclick=\"javascript:ga('send', 'event', 'Button', 'Click', 'LinkedIn Share');\"
+         target=\"_blank\">
+         <i class=\"fab fa-linkedin fa-2x\"></i>
+      </a>
+
+      <a href=\"mailto:?to=&amp;subject=%%f&amp;body=%%f\">
+         <i class=\"far fa-envelope fa-2x\"></i>
+      </a>
+
+      <span class=\"gecko\">
+        <!-- Open an issue -->
+        <a href=\"https://github.com/mesbah-uddin/mesbah-uddin.github.io/issues/new?title=%%t&body=Change request feedback: https://mesbah-uddin.github.io/%%f\" target=\"_blank\">
+           <i class=\"fab fa-github-square fa-2x\"></i>
+        </a>
+      </span>
+
+      </div>"
+        ))
 #+END_SRC
 **** Preamble
 #+BEGIN_SRC emacs-lisp
@@ -1023,6 +1085,8 @@ Put all configurations in the hash-table 'mon-configdb'
 
         (mapc #'(lambda (y) (insert (format "<link rel=\"stylesheet\" type=\"text/css\" href=\"/%s\" />\n" (funcall f-local-css-path y))))
               local-css-list)
+
+        (insert (format "<link rel=\"stylesheet\" href=\"https://use.fontawesome.com/releases/v5.5.0/css/all.css\" integrity=\"sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU\" crossorigin=\"anonymous\">"))
 
         (buffer-string))))
 #+END_SRC
