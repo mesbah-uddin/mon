@@ -232,7 +232,96 @@ SOFTWARE.
 
       (if return-string random-string)))
 #+END_SRC
+*** Archive list with taglinks
+#+BEGIN_SRC emacs-lisp
+  (defun mon-list-files-simple ()
+    (interactive)
+    (let ((nodes
+           (mon-list-files
+            "/Volumes/mu/git/mon_m/stock/grains/notes/"
+            "\.org$"
+            nil)))
 
+      ;; DEBUG-DISPLAY
+      (while nodes
+        (message (format "\n LIST: D=%s Ti=%s" (car (car nodes)) (cdr (car nodes))))
+        (setq nodes (cdr nodes)))
+      ))
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-list-files-extended ()
+    (interactive)
+    (let ((nodes
+           (mon-list-files
+            "/Volumes/mu/git/mon_m/stock/grains/notes/"
+            "\.org$"
+            t))
+          (f-print (lambda (x)
+                     (while x
+                       (message (format "%s %s" (car (car nodes)) (cdr (car nodes))))
+                       (setq nodes (cdr nodes)))
+                     ))
+          )
+
+      ;; DEBUG-DISPLAY
+      ;;(message (format "\n LIST: %s" nodes))
+      ;;(message (format "\n LIST-alist-get: %s" (alist-get (intern "xx") nodes)))
+      (while nodes
+        (message (format "\nLIST:\nkey=%s\nvalue=%s\n%s"
+                         (car (car nodes))
+                         (alist-get (car (car nodes)) nodes)
+                         (mapconcat 'identity
+                                    (cl-loop for y in (alist-get (car (car nodes)) nodes)
+                                             collect (message (format "\n<TEST>%s\n%s" (car y) (car (cdr y))))
+                                             )
+                                    "")
+                         ))
+        (setq nodes (cdr nodes)))
+      ))
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-list-files (&optional directory regexp-pat extended)
+    (let ((nodes '())
+          (f-get-prop (lambda (file prop)
+                        (mon-retrieve-org-file-custom-properties file prop))))
+
+      (mapc (lambda (x)
+              (if extended
+                  (cl-loop for y in (split-string (mapconcat 'identity (funcall f-get-prop x :select-tags) "") ",")
+                           collect (setq nodes (mon-local-accumulate-elements y nodes)))
+                (setq nodes
+                      (append nodes
+                              (list (cons (car (funcall f-get-prop x :date))
+                                          (funcall f-get-prop x :title)))))))
+            (directory-files-recursively directory regexp-pat))
+
+      nodes))
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-local-accumulate-elements (y alist)
+    (let ((f-get-prop (lambda (file prop)
+                        (mon-retrieve-org-file-custom-properties file prop))))
+
+      (setf (alist-get (intern y) alist) ;; update elements in the list
+            (append (alist-get (intern y) alist)
+                    (list (cons (car (funcall f-get-prop x :date))
+                                (funcall f-get-prop x :title)))))
+
+      alist))
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-retrieve-org-file-custom-properties (&optional file props)
+    (interactive)
+
+    (with-temp-buffer
+      (insert-file-contents file nil nil nil t)
+      (org-mode)
+      (goto-char (point-min))
+      (plist-get (org-export-get-environment) props)))
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+
+#+END_SRC
 ** CAPTURE and refile as a subtree in this note
 *** Capture Templates
 #+BEGIN_SRC emacs-lisp
