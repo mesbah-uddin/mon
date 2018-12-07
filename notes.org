@@ -765,7 +765,7 @@ SOFTWARE.
 
       (mon-org-custom-description-create
        (replace-regexp-in-string
-        "[ \t\n]+" " -EOL- "
+        "[\n]+" " -EOL- "
         (mon-retrieve-contents-from-special-blocks-takeaway
          del-keywords-block)))
 
@@ -1127,7 +1127,7 @@ Put all configurations in the hash-table 'mon-configdb'
              (my-tags-string (mapconcat 'identity my-tags  ""))
               (f-tag-span (lambda (x)
                             (let ((sanitized-x (mon-chomp x)))
-                              (message (format "\nX-IN-LAMBDA=%S" sanitized-x))
+                              ;;(message (format "\nX-IN-LAMBDA=%S" sanitized-x))
                               (format
                                "
           <span class=\"tag\">
@@ -1390,6 +1390,8 @@ Put all configurations in the hash-table 'mon-configdb'
                                 (progn (format "\n  [[%s][%s]]"
                                                (funcall f-link x)
                                                (funcall f-name x)))))
+             (f-get-prop (lambda (file prop)
+                           (mon-retrieve-org-file-custom-properties file prop)))
              (author-property (org-publish-find-property entry :author project))
              (author-and-link
               (cond ((null author-property) "Anonymous")
@@ -1398,21 +1400,26 @@ Put all configurations in the hash-table 'mon-configdb'
                      (mapconcat
                       'identity
                       (cl-loop for x in author-property by #'cddr collect (funcall f-name-and-link x))
-                      ", ")))))
+                      ", "))))
+             (the-description (car (funcall f-get-prop (concat (mon-base-directory nil "notes") entry) "DESCRIPTION"))) ;; (mapconcat 'identity (funcall f-get-prop (concat (mon-base-directory nil "notes") entry) "DESCRIPTION") "")
+             (sanitized-description (replace-regexp-in-string  "-EOL-" "\n" the-description))
+             )
         ;;(author-and-link
         ;; (cond ((null author-property) "Anonymous")
         ;;       ((atom author-property) author-property)
         ;;       (t (format "[[%s][%s]]"
         ;;                  (plist-get (nth 1 author-property) :raw-link)
 
+        (message (format "\n\n\nfile=%s\nDESCR=%S"
+                         (concat (mon-base-directory nil "notes") entry)
+                         sanitized-description))
         (concat
          (format "
         [[file:%s][%s]]
         ,#+begin_wrap-up
         <h1 class=\"cruise-headline\">[[file:%s][%s]]</h1>
         \n<div>\n <span class=\"cruise-date\"> %s </span>\n%s\n</div>
-        ,#+INCLUDE: \"%s::takeaway\"
-        [[file:%s][Read more]]
+        %s [[file:%s][Read more]]
         <hr />
         ,#+end_wrap-up
         "
@@ -1427,7 +1434,7 @@ Put all configurations in the hash-table 'mon-configdb'
                  (if author-and-link
                      (format "  by\n <span class=\"cruise-crew\"> %s\n </span>" author-and-link)
                    "")
-                 entry
+                 sanitized-description
                  entry)))))
  #+END_SRC
 
@@ -1666,12 +1673,14 @@ Put all configurations in the hash-table 'mon-configdb'
                     'identity
                     (cl-loop for x in author-property by #'cddr collect (funcall f-name-and-link x))
                     "  ")))))
-           ;;
-           ;;nth==  0                                      2
-           ;;       ((link (:type https ...) AuthorName1), (link (:type https ...) AuthorName2))
-           ;;nth==   0     1                 2              0    1                 2
-           ;;
-           (format "<span class=\"cruise-crew\">\n  %s </span>\n\n" author-and-link)))
+      ;;
+      ;;nth==  0                                      2
+      ;;       ((link (:type https ...) AuthorName1), (link (:type https ...) AuthorName2))
+      ;;nth==   0     1                 2              0    1                 2
+      ;;
+      (if author-and-link
+          (format "<span class=\"cruise-crew\">\n  %s </span>\n\n" author-and-link))))
+
 #+END_SRC
 
 *** Project-alist
