@@ -265,39 +265,41 @@ SOFTWARE.
 #+BEGIN_SRC emacs-lisp
   (defun mon-list-files-extended (&optional archive-dest-file)
     (interactive)
-    (let ((nodes
-           (mon-list-files
-            (mon-base-directory nil "notes") ;;"/Volumes/mu/git/mon_m/stock/grains/notes/"
-            "\.org$"
-            t))
+    (let ((nodes ;;"/Volumes/mu/git/mon_m/stock/grains/notes/"
+           (mon-list-files (mon-base-directory nil "notes") "\.org$" t))
+
           (f-print (lambda (x)
                      (while x
                        (message (format "%s %s" (car (car nodes)) (cdr (car nodes))))
-                       (setq nodes (cdr nodes)))
-                     ))
+                       (setq nodes (cdr nodes)))))
           (dest-file (or archive-dest-file
                          (concat (file-name-directory (mon-base-directory nil "notes"))
-                                 "archive-taglinks.org")))
-          )
+                                 "archive-taglinks.org"))))
 
       (with-temp-buffer
         ;; DEBUG-DISPLAY
         ;;(message (format "\n LIST: %s" nodes))
         ;;(message (format "\n LIST-alist-get: %s" (alist-get (intern "xx") nodes)))
         (while nodes
-          (insert (format "\n<h3 id=\"%s\">%s</h3>\n<ul class=\"archive\">%s\n</ul>"
-                           (car (car nodes))
-                           (car (car nodes))
-                           (mapconcat
-                            'identity
-                            (cl-loop for y in (alist-get (car (car nodes)) nodes)
-                                     collect (format "\n<li><span class=\"archive-date\">%s</span> -- <a href=\"%s\">%s</a></li>"
-                                                     (or (nth 2 y) "SOMEDAY")
-                                                     (nth 0 y)
-                                                     (nth 1 y)
-                                                     ))
-                                      "")
-                           ))
+          (let ((the-tag (car (car nodes))))
+
+            (if (not (string= the-tag ""))
+                (insert (format "\n<h3 id=\"%s\">%s</h3>\n<ul class=\"archive\">%s\n</ul>"
+                                the-tag
+                                the-tag
+                                (mapconcat
+                                 'identity
+                                 (cl-loop for y in (alist-get (car (car nodes)) nodes)
+                                          collect (progn
+                                                    (let ((the-url (nth 0 y))
+                                                          (the-title (nth 1 y))
+                                                          (the-date (nth 2 y)))
+                                                      (if (and the-url the-title the-date)
+                                                          (format "\n<li><span class=\"archive-date\">%s</span> -- <a href=\"%s\">%s</a></li>"
+                                                                  (format-time-string "%d %b %Y" (date-to-time the-date))
+                                                                  the-url
+                                                                  the-title)))))
+                                 "")))))
           (setq nodes (cdr nodes)))
         (write-region (buffer-substring-no-properties (point-min) (point-max)) nil dest-file))
       ))
