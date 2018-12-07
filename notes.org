@@ -1422,7 +1422,7 @@ Put all configurations in the hash-table 'mon-configdb'
                  entry
                  (org-publish-find-title entry project)
                  ;;
-                 (format-time-string "%B %e, %Y" (org-publish-find-date entry project))
+                 (format-time-string "%d %b %Y" (org-publish-find-date entry project))
                  ;;
                  (if author-and-link
                      (format "  by\n <span class=\"cruise-crew\"> %s\n </span>" author-and-link)
