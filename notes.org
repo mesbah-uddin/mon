@@ -236,28 +236,30 @@ SOFTWARE.
 #+BEGIN_SRC emacs-lisp
   (defun mon-list-files-simple (&optional archive-dest-file)
     (interactive)
-    (let ((nodes
-           (mon-list-files
-            (mon-base-directory nil "notes") ;;"/Volumes/mu/git/mon_m/stock/grains/notes/"
-            "\.org$"
-            nil))
+    (let ((nodes ;; "/Volumes/mu/git/mon_m/stock/grains/notes/" "\.org$"
+           (mon-list-files (mon-base-directory nil "notes") "\.org$" nil))
+
           (dest-file (or archive-dest-file
                          (concat (file-name-directory (mon-base-directory nil "notes"))
-                                 "archive-simple.org")))
-          )
+                                 "archive-simple.org"))))
 
       (with-temp-buffer
         ;; DEBUG-DISPLAY
         (insert (format "\n<ul>"))
-        (while nodes
-          (insert (format "\n<li><span class=\"archive-date\">%s</span> -- <a href=\"%s\">%s</a></li>" ;;"\n\nD=%s -- [[file:%s][%s]]"
-                          (or (nth 2 (car nodes)) "SOMEDAY")
-                          (nth 0 (car nodes))
-                          (nth 1 (car nodes))
-                          ))
-          (setq nodes (cdr nodes)))
-        (insert (format "\n</ul>"))
-        (write-region (buffer-substring-no-properties (point-min) (point-max)) nil dest-file))
+           (while nodes
+             (let ((the-url (nth 0 (car nodes)))
+                   (the-title (nth 1 (car nodes)))
+                   (the-date (nth 2 (car nodes))))
+
+               (if (and the-url the-title the-date)
+                   (insert
+                    (format "\n<li><span class=\"archive-date\">%s</span> -- <a href=\"%s\">%s</a></li>"
+                            (format-time-string "%d %b %Y" (date-to-time (nth 2 (car nodes))))
+                            the-url
+                            the-title))))
+             (setq nodes (cdr nodes)))
+           (insert (format "\n</ul>"))
+           (write-region (buffer-substring-no-properties (point-min) (point-max)) nil dest-file))
       ))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
