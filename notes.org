@@ -1218,7 +1218,7 @@ Put all configurations in the hash-table 'mon-configdb'
   (defun mon-copyright (&optional $content $icons)
     "
   <div class=\"footer\">
-    <p>Content &copy; 2018, All rights reserved.
+    <p>Content &copy; 2018 All rights reserved
     </p>
   </div>"
     )
