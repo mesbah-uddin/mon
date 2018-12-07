@@ -248,12 +248,15 @@ SOFTWARE.
 
       (with-temp-buffer
         ;; DEBUG-DISPLAY
+        (insert (format "\n<ul>"))
         (while nodes
-          (insert (format "\n LIST: D=%s -- [[%s][%s]]"
-                          (car (car nodes))
-                          "http://localhost:8000/notes/archive-simple.html" ;;(car (cdr (car nodes)))
-                          (car (cdr (car nodes)))))
+          (insert (format "\n<li><span class=\"archive-date\">%s</span> -- <a href=\"%s\">%s</a></li>" ;;"\n\nD=%s -- [[file:%s][%s]]"
+                          (or (nth 2 (car nodes)) "SOMEDAY")
+                          (nth 0 (car nodes))
+                          (nth 1 (car nodes))
+                          ))
           (setq nodes (cdr nodes)))
+        (insert (format "\n</ul>"))
         (write-region (buffer-substring-no-properties (point-min) (point-max)) nil dest-file))
       ))
 #+END_SRC
