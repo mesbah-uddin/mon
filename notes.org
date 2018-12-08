@@ -1195,7 +1195,7 @@ Put all configurations in the hash-table 'mon-configdb'
          <i class=\"fab fa-linkedin fa-2x\"></i>
       </a>
 
-      <a href=\"mailto:?to=&amp;subject=%%f&amp;body=%%f\">
+      <a href=\"mailto:?to=&amp;subject=https://mesbah-uddin.github.io/%%f&amp;body=https://mesbah-uddin.github.io/%%f\">
          <i class=\"far fa-envelope fa-2x\"></i>
       </a>
 
