@@ -1682,14 +1682,14 @@ Put all configurations in the hash-table 'mon-configdb'
       ;;
 
       (cond ((and date-property author-and-link)
-             (format "\n<div>\n <span class=\"cruise-date\"> %s </span>\n <span class=\"cruise-crew\">\n  %s\n </span>\n</div>"
+             (format "\n<div class=\"wrap-up\">\n <span class=\"cruise-date\"> %s </span>\n <span class=\"cruise-crew\">\n  %s\n </span>\n</div>"
                      (format-time-string "%d %b %Y" (date-to-time (car date-property)))
                      author-and-link))
             ((and date-property (not author-and-link))
-             (format "\n<div>\n <span class=\"cruise-date\"> %s </span>\n</div>"
+             (format "\n<div class=\"wrap-up\">\n <span class=\"cruise-date\"> %s </span>\n</div>"
                      (format-time-string "%d %b %Y" (date-to-time (car date-property)))))
             ((and author-and-link (not date-property))
-             (format "\n<div>\n <span class=\"cruise-crew\">\n  %s\n </span>\n</div>"
+             (format "\n<div class=\"wrap-up\">\n <span class=\"cruise-crew\">\n  %s\n </span>\n</div>"
                      author-and-link)))))
 
 #+END_SRC
