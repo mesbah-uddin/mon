@@ -1403,7 +1403,7 @@ Put all configurations in the hash-table 'mon-configdb'
                       ", "))))
              (the-description (car (funcall f-get-prop (concat (mon-base-directory nil "notes") entry) "DESCRIPTION"))) ;; (mapconcat 'identity (funcall f-get-prop (concat (mon-base-directory nil "notes") entry) "DESCRIPTION") "")
              (sanitized-description (replace-regexp-in-string  "-EOL-" "\n" the-description))
-             )
+             (date-property (org-publish-find-property entry :date project)))
         ;;(author-and-link
         ;; (cond ((null author-property) "Anonymous")
         ;;       ((atom author-property) author-property)
@@ -1426,7 +1426,9 @@ Put all configurations in the hash-table 'mon-configdb'
                  entry
                  (org-publish-find-title entry project)
                  ;;
-                 (format-time-string "%d %b %Y" (org-publish-find-date entry project))
+                 (if date-property
+                     (format-time-string "%d %b %Y" (date-to-time (car date-property)))   ;; use date-property, or
+                   (format-time-string "%d %b %Y" (org-publish-find-date entry project))) ;; use publish-date
                  ;;
                  (if author-and-link
                      (format "  by\n <span class=\"cruise-crew\"> %s\n </span>" author-and-link)
