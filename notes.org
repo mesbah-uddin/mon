@@ -1410,9 +1410,6 @@ Put all configurations in the hash-table 'mon-configdb'
         ;;       (t (format "[[%s][%s]]"
         ;;                  (plist-get (nth 1 author-property) :raw-link)
 
-        (message (format "\n\n\nfile=%s\nDESCR=%S"
-                         (concat (mon-base-directory nil "notes") entry)
-                         sanitized-description))
         (concat
          (format "
         [[file:%s][%s]]
@@ -1659,7 +1656,7 @@ Put all configurations in the hash-table 'mon-configdb'
     (let* ((f-link (lambda (x) (plist-get (nth 1 x) :raw-link)))
            (f-name (lambda (x) (nth 2 x)))
            (f-name-and-link (lambda (x)
-                              (progn (format "<a href=\"%s\">%s</a>\n"
+                              (progn (format "<a href=\"%s\">%s</a>"
                                              (funcall f-link x)
                                              (funcall f-name x)))))
            ;;
@@ -1672,14 +1669,26 @@ Put all configurations in the hash-table 'mon-configdb'
                    (mapconcat
                     'identity
                     (cl-loop for x in author-property by #'cddr collect (funcall f-name-and-link x))
-                    "  ")))))
+                    "\n  "))))
+           ;;
+           (date-property (plist-get info :date)))
+
       ;;
       ;;nth==  0                                      2
       ;;       ((link (:type https ...) AuthorName1), (link (:type https ...) AuthorName2))
       ;;nth==   0     1                 2              0    1                 2
       ;;
-      (if author-and-link
-          (format "<span class=\"cruise-crew\">\n  %s </span>\n\n" author-and-link))))
+
+      (cond ((and date-property author-and-link)
+             (format "\n<div>\n <span class=\"cruise-date\"> %s </span>\n <span class=\"cruise-crew\">\n  %s\n </span>\n</div>"
+                     (format-time-string "%d %b %Y" (date-to-time (car date-property)))
+                     author-and-link))
+            ((and date-property (not author-and-link))
+             (format "\n<div>\n <span class=\"cruise-date\"> %s </span>\n</div>"
+                     (format-time-string "%d %b %Y" (date-to-time (car date-property)))))
+            ((and author-and-link (not date-property))
+             (format "\n<div>\n <span class=\"cruise-crew\">\n  %s\n </span>\n</div>"
+                     author-and-link)))))
 
 #+END_SRC
 
