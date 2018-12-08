@@ -276,6 +276,7 @@ SOFTWARE.
                          (concat (file-name-directory (mon-base-directory nil "notes"))
                                  "archive-taglinks.org"))))
 
+
       (with-temp-buffer
         ;; DEBUG-DISPLAY
         ;;(message (format "\n LIST: %s" nodes))
@@ -376,6 +377,42 @@ SOFTWARE.
 
         (funcall f-parse-for-keyword props))
       ))
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-list-file-list-tags (&optional archive-dest-file)
+      (interactive)
+      (let ((nodes ;;"/Volumes/mu/git/mon_m/stock/grains/notes/"
+             (mon-list-files (mon-base-directory nil "notes") "\.org$" t))
+
+            (f-print (lambda (x)
+                       (while x
+                         (message (format "%s %s" (car (car nodes)) (cdr (car nodes))))
+                         (setq nodes (cdr nodes)))))
+            (dest-file (or archive-dest-file
+                           (concat (file-name-directory (mon-base-directory nil "notes"))
+                                   "tags.org"))))
+      (with-temp-buffer
+        ;; DEBUG-DISPLAY
+        ;;(message (format "\n LIST: %s" nodes))
+        ;;(message (format "\n LIST-alist-get: %s" (alist-get (intern "xx") nodes)))
+        (insert (format "#+TITLE: Tags\n\n"))
+
+        (when nodes
+          (insert (format "<ul>"))
+          (while nodes
+            (let ((the-tag (car (car nodes))))
+
+              (if (not (string= the-tag ""))
+                  (insert (format "\n <li><span class=\"%s\"><a href=\"%s#%s\">%s</a></li>"
+                                  the-tag
+                                  "archive-taglinks.html"
+                                  the-tag
+                                  the-tag
+                                  ))))
+            (setq nodes (cdr nodes)))
+          (insert (format "\n</ul>\n")))
+          (write-region (buffer-substring-no-properties (point-min) (point-max)) nil dest-file))
+        ))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
 
@@ -1820,7 +1857,7 @@ Put all configurations in the hash-table 'mon-configdb'
                      :publishing-directory (mon-publishing-directory nil "notes")
                      :publishing-function 'org-html-publish-to-html
                      :recursive t
-                     :exclude (regexp-opt (list "archive-simple.org" "archive-taglinks.org"))
+                     :exclude (regexp-opt (list "archive-simple.org" "archive-taglinks.org" "tags.org"))
 
 
                      :html-postamble (mon-html-postamble)
