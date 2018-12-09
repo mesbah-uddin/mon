@@ -969,53 +969,44 @@ SOFTWARE.
 #+BEGIN_SRC emacs-lisp
   (defun mon-facebook-messenger-customerchat-editor ()
     "
-  <!-- Your customer chat code -->
-  <div class=\"fb-customerchat\"
-    attribution=setup_tool
-    page_id=\"356993381725418\">
-  </div>\n
+    <!-- Your customer chat code -->
+    <div class=\"fb-customerchat\"
+      attribution=setup_tool
+      page_id=\"356993381725418\">
+    </div>\n
   "
     )
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (defun mon-facebook-messenger-sendto-messenger-codes ()
-    "<!-- did not work so far -->
-<script>
-
-  FB.Event.subscribe('send_to_messenger', function(e) {
-    // callback for events triggered by the plugin
-
-  });
-
-</script>
-"
-  )
-#+END_SRC
-#+BEGIN_SRC emacs-lisp
-  (defun mon-facebook-messenger-sendto-messenger-editor ()
-    "<!-- did not work so far -->
-  <div class=\"fb-send-to-messenger\"
-    messenger_app_id=\"2325134224372901\"
-    page_id=\"356993381725418\"
-    data-ref=\"<PASS_THROUGH_PARAM>\"
-    color=\"<blue | white>\"
-    size=\"<standard | large | xlarge>\">
-  </div>\n
     "
+    <!-- did not work so far -->
+    <script>
+
+      FB.Event.subscribe('send_to_messenger', function(e) {
+        // callback for events triggered by the plugin
+
+      });
+
+    </script>
+  "
     )
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
-  (defun mon-facebook-messenger-send-to ()
+  (defun mon-facebook-messenger-send-to-messenger-editor ()
     "
-      <a href=\"https://m.me/356993381725418\"
-        title=\"Message on Facebook\"
-        onclick=\"javascript:ga('send', 'event', 'Button', 'Click', 'Facebook Message');\"
-        target=\"_blank\">
-        <i class=\"fab fa-facebook-messenger fa-2x\"></i>
-      </a>
-    "
+    <!-- did not work so far -->
+    <div class=\"fb-send-to-messenger\"
+      messenger_app_id=\"2325134224372901\"
+      page_id=\"356993381725418\"
+      data-ref=\"<PASS_THROUGH_PARAM>\"
+      color=\"<blue | white>\"
+      size=\"<standard | large | xlarge>\">
+    </div>\n
+  "
     )
 #+END_SRC
+
 ** HTML Publishing
 *** Congfiguration database
 Put all configurations in the hash-table 'mon-configdb'
@@ -1248,7 +1239,7 @@ Put all configurations in the hash-table 'mon-configdb'
                'identity
                (cl-loop for x in my-tags by #'cddr collect (funcall f-tag-span x))
                "\t")
-              "\n</div>")
+              "\n</div><!-- anchor-tags -->")
     "")))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
@@ -1258,64 +1249,111 @@ Put all configurations in the hash-table 'mon-configdb'
 
      "%K" ;; anchor-tags
 
-     (mon-share-me "twitter" "facebook" "google+")
+     (mon-share-me t t t t t t t t) ;; $twitter $facebook $google+ $linkedin $github-track $email $messenger $customerchat)
      (mon-facebook-comments-plugin-editor)
      ;;(mon-facebook-messenger-customerchat-editor) ;; taken to social-connect-region
      ;;(mon-facebook-messenger-sendto-messenger-editor)
      (mon-copyright "content" "icons")))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
-  (defun mon-share-me (&optional $twitter $facebook $google+)
-    (format "
-  <div class=\"share-me\">
-
-  <a href=\"https://twitter.com/intent/tweet?via=@MesbahUddin&hashtags=%%t&text=%%S&url=https://mesbah-uddin.github.io/%%f\"
-         title=\"\"
-         onclick=\"javascript:ga('send', 'event', 'Button', 'Click', 'Twitter Share');\"
-         target=\"_blank\">
-         <i class=\"fab fa-twitter-square fa-2x\"></i>
+  (defun mon-social-share-me-twitter ()
+    "
+    <a href=\"https://twitter.com/intent/tweet?via=@MesbahUddin&hashtags=%%t&text=%%S&url=https://mesbah-uddin.github.io/%%f\"
+      title=\"\"
+      onclick=\"javascript:ga('send', 'event', 'Button', 'Click', 'Twitter Share');\"
+      target=\"_blank\">
+      <i class=\"fab fa-twitter-square fa-2x\"></i>
+    </a>
+  "
+    )
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-social-share-me-facebook ()
+    "
+    <a href=\"https://www.facebook.com/sharer.php?u=https://mesbah-uddin.github.io/%%f\"
+      title=\"\"
+      onclick=\"javascript:ga('send', 'event', 'Button', 'Click', 'Facebook Share');\"
+      target=\"_blank\">
+      <i class=\"fab fa-facebook-square fa-2x\"></i>
+    </a>
+  "
+      )
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-social-share-me-google-plus ()
+    "
+    <a href=\"https://plus.google.com/share?url=https://mesbah-uddin.github.io/%%f\"
+      title=\"\"
+      onclick=\"javascript:ga('send', 'event', 'Button', 'Click', 'Google Plus Share');\"
+      target=\"_blank\">
+      <i class=\"fab fa-google-plus-square fa-2x\"></i>
+    </a>
+  "
+    )
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-social-share-me-linkedin ()
+    "
+    <a href=\"https://www.linkedin.com/shareArticle?mini=true&url=https://mesbah-uddin.github.io/%%f\"
+      &summary=%%S&source=LinkedIn
+      title=\"\"
+      onclick=\"javascript:ga('send', 'event', 'Button', 'Click', 'LinkedIn Share');\"
+      target=\"_blank\">
+      <i class=\"fab fa-linkedin fa-2x\"></i>
+    </a>
+  "
+     )
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-feedback-create-ticket-github ()
+    "
+    <!-- Open an issue -->
+    <span class=\"gecko\">
+      <a href=\"https://github.com/mesbah-uddin/mesbah-uddin.github.io/issues/new?title=%%t&body=Change request feedback: https://mesbah-uddin.github.io/%%f\" target=\"_blank\">
+        <i class=\"fab fa-github-square fa-2x\"></i>
       </a>
-
-      <a href=\"https://www.facebook.com/sharer.php?u=https://mesbah-uddin.github.io/%%f\"
-         title=\"\"
-         onclick=\"javascript:ga('send', 'event', 'Button', 'Click', 'Facebook Share');\"
-         target=\"_blank\">
-         <i class=\"fab fa-facebook-square fa-2x\"></i>
-      </a>
-
-      <a href=\"https://plus.google.com/share?url=https://mesbah-uddin.github.io/%%f\"
-         title=\"\"
-         onclick=\"javascript:ga('send', 'event', 'Button', 'Click', 'Google Plus Share');\"
-         target=\"_blank\">
-         <i class=\"fab fa-google-plus-square fa-2x\"></i>
-      </a>
-
-
-      <a href=\"https://www.linkedin.com/shareArticle?mini=true&url=https://mesbah-uddin.github.io/%%f\"
-         &summary=%%S&source=LinkedIn
-         title=\"\"
-         onclick=\"javascript:ga('send', 'event', 'Button', 'Click', 'LinkedIn Share');\"
-         target=\"_blank\">
-         <i class=\"fab fa-linkedin fa-2x\"></i>
-      </a>
-
-      <a href=\"mailto:?to=&amp;subject=https://mesbah-uddin.github.io/%%f&amp;body=https://mesbah-uddin.github.io/%%f\">
-         <i class=\"far fa-envelope fa-2x\"></i>
-      </a>
-
-      <span class=\"gecko\">
-        <!-- Open an issue -->
-        <a href=\"https://github.com/mesbah-uddin/mesbah-uddin.github.io/issues/new?title=%%t&body=Change request feedback: https://mesbah-uddin.github.io/%%f\" target=\"_blank\">
-           <i class=\"fab fa-github-square fa-2x\"></i>
-        </a>
-      </span>
-
-      %s
-      %s
-      </div>"
-            (mon-facebook-messenger-send-to)
-            (mon-facebook-messenger-customerchat-editor)
-        ))
+    </span>
+  "
+    )
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-feedback-send-email-to ()
+    "
+    <a href=\"mailto:?to=&amp;subject=https://mesbah-uddin.github.io/%%f&amp;body=https://mesbah-uddin.github.io/%%f\">
+      <i class=\"far fa-envelope fa-2x\"></i>
+    </a>
+  "
+    )
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-feedback-facebook-messenger-send-to ()
+    "
+    <a href=\"https://m.me/356993381725418\"
+      title=\"Message on Facebook\"
+      onclick=\"javascript:ga('send', 'event', 'Button', 'Click', 'Facebook Message');\"
+      target=\"_blank\">
+      <i class=\"fab fa-facebook-messenger fa-2x\"></i>
+    </a>
+  "
+    )
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+    (defun mon-share-me (&optional $twitter $facebook $google+ $linkedin $github-track $email $messenger $customerchat)
+      (format "\n<div class=\"share-me\">\n%s\n</div><!-- share-me -->\n\n"
+              (concat (and $twitter (mon-social-share-me-twitter))
+                      (and $facebook (mon-social-share-me-facebook))
+                      (and $google+ (mon-social-share-me-google-plus))
+                      (and $linkedin (mon-social-share-me-linkedin))
+                      ;;
+                      (and $github-track (mon-feedback-create-ticket-github))
+                      ;;
+                      (and $email (mon-feedback-send-email-to))
+                      (and $messenger (mon-feedback-facebook-messenger-send-to))
+                      ;;
+                      (and $customerchat (mon-facebook-messenger-customerchat-editor)))
+              ))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (defun mon-last-update ()
