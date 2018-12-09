@@ -950,7 +950,72 @@ SOFTWARE.
      </script>
     ")
 #+END_SRC
+**** Facebook Messenger Plugin
+#+BEGIN_SRC emacs-lisp
+  (defun mon-facebook-messenger-customerchat-codes ()
+    "
+<!-- Load Facebook SDK for JavaScript -->
+<!-- <div id=\"fb-root\"></div> -->
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script>
+"
+  )
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-facebook-messenger-customerchat-editor ()
+    "
+  <!-- Your customer chat code -->
+  <div class=\"fb-customerchat\"
+    attribution=setup_tool
+    page_id=\"356993381725418\">
+  </div>\n
+  "
+    )
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-facebook-messenger-sendto-messenger-codes ()
+    "<!-- did not work so far -->
+<script>
 
+  FB.Event.subscribe('send_to_messenger', function(e) {
+    // callback for events triggered by the plugin
+
+  });
+
+</script>
+"
+  )
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-facebook-messenger-sendto-messenger-editor ()
+    "<!-- did not work so far -->
+  <div class=\"fb-send-to-messenger\"
+    messenger_app_id=\"2325134224372901\"
+    page_id=\"356993381725418\"
+    data-ref=\"<PASS_THROUGH_PARAM>\"
+    color=\"<blue | white>\"
+    size=\"<standard | large | xlarge>\">
+  </div>\n
+    "
+    )
+#+END_SRC
+#+BEGIN_SRC emacs-lisp
+  (defun mon-facebook-messenger-send-to ()
+    "
+      <a href=\"https://m.me/356993381725418\"
+        title=\"Message on Facebook\"
+        onclick=\"javascript:ga('send', 'event', 'Button', 'Click', 'Facebook Message');\"
+        target=\"_blank\">
+        <i class=\"fab fa-facebook-messenger fa-2x\"></i>
+      </a>
+    "
+    )
+#+END_SRC
 ** HTML Publishing
 *** Congfiguration database
 Put all configurations in the hash-table 'mon-configdb'
@@ -1195,6 +1260,8 @@ Put all configurations in the hash-table 'mon-configdb'
 
      (mon-share-me "twitter" "facebook" "google+")
      (mon-facebook-comments-plugin-editor)
+     ;;(mon-facebook-messenger-customerchat-editor) ;; taken to social-connect-region
+     ;;(mon-facebook-messenger-sendto-messenger-editor)
      (mon-copyright "content" "icons")))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
@@ -1243,7 +1310,11 @@ Put all configurations in the hash-table 'mon-configdb'
         </a>
       </span>
 
+      %s
+      %s
       </div>"
+            (mon-facebook-messenger-send-to)
+            (mon-facebook-messenger-customerchat-editor)
         ))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
@@ -1273,37 +1344,40 @@ Put all configurations in the hash-table 'mon-configdb'
     )
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
-  (defun mon-html-preamble-impl-proxy (&optional ships-alist mainsail headsail)
-    "Note: mainsail/headsail are placeholders for main/sub-headline."
+    (defun mon-html-preamble-impl-proxy (&optional ships-alist mainsail headsail)
+      "Note: mainsail/headsail are placeholders for main/sub-headline."
 
-    (let* ((f-name (lambda (x) (alist-get ':name  x)))
-           (f-link (lambda (x) (alist-get ':anchor  x)))
-           (f-insert
-            (lambda (x)
-              (progn
-                (insert (format "\n  <a href=\"%s\">%s</a>"
-                                (expand-file-name (file-name-as-directory
-                                                   (funcall f-link x))
-                                                  "/")
-                                (funcall f-name x)))))))
+      (let* ((f-name (lambda (x) (alist-get ':name  x)))
+             (f-link (lambda (x) (alist-get ':anchor  x)))
+             (f-insert
+              (lambda (x)
+                (progn
+                  (insert (format "\n  <a href=\"%s\">%s</a>"
+                                  (expand-file-name (file-name-as-directory
+                                                     (funcall f-link x))
+                                                    "/")
+                                  (funcall f-name x)))))))
 
-      (with-temp-buffer
+        (with-temp-buffer
 
-        (insert (format "<div class=\"masthead\">"))
-        (insert (format "\n <h3 class=\"mainsail\"><a href=\"localhost:8000\" title=\"Home\">%s</a></h3>" (or mainsail "%%MAIN-HEADLINE")))
-        (insert (format "\n <h3 class=\"headsail\"><small>%s</small></h3>" (or headsail "%%SUB-HEADLINE")))
-        (insert (format "\n <ul class=\"compass\">"))
+          (insert (format "<div class=\"masthead\">"))
+          (insert (format "\n <h3 class=\"mainsail\"><a href=\"localhost:8000\" title=\"Home\">%s</a></h3>" (or mainsail "%%MAIN-HEADLINE")))
+          (insert (format "\n <h3 class=\"headsail\"><small>%s</small></h3>" (or headsail "%%SUB-HEADLINE")))
+          (insert (format "\n <ul class=\"compass\">"))
 
-        (funcall f-insert (car (alist-get ':ships ships-alist)))
-        (mapc #'(lambda (y)
-                  (funcall f-insert y))
-              (cdr (alist-get ':ships ships-alist)))
+          (funcall f-insert (car (alist-get ':ships ships-alist)))
+          (mapc #'(lambda (y)
+                    (funcall f-insert y))
+                (cdr (alist-get ':ships ships-alist)))
 
-        (insert (format "\n </ul>"))
-        (insert (format "\n</div> <!-- masthead -->\n"))
+          (insert (format "\n </ul>"))
+          (insert (format "\n</div> <!-- masthead -->\n"))
 
-        (insert (mon-facebook-comments-plugin-codes))
-        (buffer-string))))
+          (insert (mon-facebook-comments-plugin-codes))
+          ;;(insert (mon-facebook-messenger-sendto-messenger-codes))
+          (insert (mon-facebook-messenger-customerchat-codes))
+
+          (buffer-string))))
 #+END_SRC
 **** Head
 #+BEGIN_SRC emacs-lisp
