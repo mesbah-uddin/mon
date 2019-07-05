@@ -1127,7 +1127,7 @@ Put all configurations in the hash-table 'mon-configdb'
 #+BEGIN_SRC emacs-lisp
   (setf (gethash 'theme-attributes mon-configdb)
         '((:mainsail . "Mesbah Uddin")
-          (:headsail . "Concise notes on improving the odds")))
+          (:headsail . "Concise notes on rational balancing and improving the odds")))
 
   (defun mon-theme-attributes (key &optional init-theme-name)
     (alist-get key (gethash 'theme-attributes mon-configdb)))
