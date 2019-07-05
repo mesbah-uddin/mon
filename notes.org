@@ -2107,6 +2107,41 @@ Put all configurations in the hash-table 'mon-configdb'
 #+begin_keywords
 
 #+end_keywords
+***** Profile highlights
+- experienced in IT, education, management and startups
+- interested in the latest trends in the international community and industry
+- motivated to contribute to the realization of people's better living
+  by closing cultural gap and utilizing population pyramid benefits across regional borders
+
+***** (Biography)
+○ Planetway Co. Ltd., Strategy Team Manager (0.5 years)
+- Worked with the state-of-the-art technology of e-Estonia’s digital e-Government technology including X-Road
+- Developed team strategy for product quality, off-shore communication alignment, and orchestrated the very first product SLA
+
+○ The MathWorks Inc., Technical Advisory and Support (6.5 years)
+- Facilitated customers express ideas and collaborate across multiple domains (200+ accounts including well-known OEM/ODM/FinTech/EDU client companies with forecasting/optimization, data analytics, fast application development and deployment with API integration, model based design, etc.
+
+○ Space-Time Engineering Co. Ltd., Consulting Software Engineer (1 year)
+- Analyzed requirements, planned, developed and implemented TCP/IP network simulation software and automated data analysis
+
+○ Kyushu University, Faculty member  (3 years)
+- Rolled out Team-Project-Based Master's program for developing high-skilled IT personnel
+- Supported Industry-Academia-Government Collaboration, E-JUST, QUBE, Silicon Sea Belt, etc.
+
+
+○ Kyushu University, Faculty of Engineering, B.Eng.
+- Department of Electrical and Information Engineering
+  Studied low power/area LSI design optimization methodology
+○ Kyushu University, Graduate School of Information Science and Technology, M.Eng.,  Ph.D.
+- Department of Computer Science and Communication Engineering
+  Studied low power/area LSI design optimization methodology (M.Eng.)
+  Studied security issues for identity and access management services (Ph.D.)
+
+***** COMMENT References
+https://www.ssken.gr.jp/MAINSITE/download/newsletter/2007/godo/ppt11.pdf
+https://core.ac.uk/download/pdf/57725456.pdf
+
+***** COMMENT Why I created this site
 I created this site to somehow convey the gist of asking for help!
 
 I worked as an assistant professor after earning a PhD in Computer Science,
