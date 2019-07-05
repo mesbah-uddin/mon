@@ -1340,20 +1340,20 @@ Put all configurations in the hash-table 'mon-configdb'
 #+BEGIN_SRC emacs-lisp
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
-    (defun mon-share-me (&optional $twitter $facebook $google+ $linkedin $github-track $email $messenger $customerchat)
-      (format "\n<div class=\"share-me\">\n%s\n</div><!-- share-me -->\n\n"
-              (concat (and $twitter (mon-social-share-me-twitter))
-                      (and $facebook (mon-social-share-me-facebook))
-                      (and $google+ (mon-social-share-me-google-plus))
-                      (and $linkedin (mon-social-share-me-linkedin))
-                      ;;
-                      (and $github-track (mon-feedback-create-ticket-github))
-                      ;;
-                      (and $email (mon-feedback-send-email-to))
-                      (and $messenger (mon-feedback-facebook-messenger-send-to))
-                      ;;
-                      (and $customerchat (mon-facebook-messenger-customerchat-editor)))
-              ))
+  (defun mon-share-me (&optional $twitter $facebook $google+ $linkedin $github-track $email $messenger $customerchat)
+    (format "\n<div class=\"share-me\">\n%s\n</div><!-- share-me -->\n\n"
+            (concat (and $twitter (mon-social-share-me-twitter))
+                    (and $facebook (mon-social-share-me-facebook))
+                    (and $google+ (mon-social-share-me-google-plus))
+                    (and $linkedin (mon-social-share-me-linkedin))
+                    ;;
+                    (and $github-track (mon-feedback-create-ticket-github))
+                    ;;
+                    (and $email (mon-feedback-send-email-to))
+                    (and $messenger (mon-feedback-facebook-messenger-send-to))
+                    ;;
+                    (and $customerchat (mon-facebook-messenger-customerchat-editor)))
+            ))
 #+END_SRC
 #+BEGIN_SRC emacs-lisp
   (defun mon-last-update ()
