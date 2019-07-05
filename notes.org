@@ -1249,7 +1249,7 @@ Put all configurations in the hash-table 'mon-configdb'
 
      "%K" ;; anchor-tags
 
-     (mon-share-me t t t t t t t t) ;; $twitter $facebook $google+ $linkedin $github-track $email $messenger $customerchat)
+     (mon-share-me t t nil t t t t t) ;; $twitter $facebook $google+ $linkedin $github-track $email $messenger $customerchat)
      (mon-facebook-comments-plugin-editor)
      ;;(mon-facebook-messenger-customerchat-editor) ;; taken to social-connect-region
      ;;(mon-facebook-messenger-sendto-messenger-editor)
