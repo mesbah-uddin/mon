@@ -1258,7 +1258,7 @@ Put all configurations in the hash-table 'mon-configdb'
 #+BEGIN_SRC emacs-lisp
   (defun mon-social-share-me-twitter ()
     "
-    <a href=\"https://twitter.com/intent/tweet?via=@MesbahUddin&hashtags=%%t&text=%%S&url=https://mesbah-uddin.github.io/%%f\"
+    <a href=\"https://twitter.com/intent/tweet?via=@MesbahUddin&hashtags=%t&text=%S&url=https://mesbah-uddin.github.io/%f\"
       title=\"\"
       onclick=\"javascript:ga('send', 'event', 'Button', 'Click', 'Twitter Share');\"
       target=\"_blank\">
@@ -1270,7 +1270,7 @@ Put all configurations in the hash-table 'mon-configdb'
 #+BEGIN_SRC emacs-lisp
   (defun mon-social-share-me-facebook ()
     "
-    <a href=\"https://www.facebook.com/sharer.php?u=https://mesbah-uddin.github.io/%%f\"
+    <a href=\"https://www.facebook.com/sharer.php?u=https://mesbah-uddin.github.io/%f\"
       title=\"\"
       onclick=\"javascript:ga('send', 'event', 'Button', 'Click', 'Facebook Share');\"
       target=\"_blank\">
@@ -1282,7 +1282,7 @@ Put all configurations in the hash-table 'mon-configdb'
 #+BEGIN_SRC emacs-lisp
   (defun mon-social-share-me-google-plus ()
     "
-    <a href=\"https://plus.google.com/share?url=https://mesbah-uddin.github.io/%%f\"
+    <a href=\"https://plus.google.com/share?url=https://mesbah-uddin.github.io/%f\"
       title=\"\"
       onclick=\"javascript:ga('send', 'event', 'Button', 'Click', 'Google Plus Share');\"
       target=\"_blank\">
@@ -1294,8 +1294,8 @@ Put all configurations in the hash-table 'mon-configdb'
 #+BEGIN_SRC emacs-lisp
   (defun mon-social-share-me-linkedin ()
     "
-    <a href=\"https://www.linkedin.com/shareArticle?mini=true&url=https://mesbah-uddin.github.io/%%f\"
-      &summary=%%S&source=LinkedIn
+    <a href=\"https://www.linkedin.com/shareArticle?mini=true&url=https://mesbah-uddin.github.io/%f\"
+      &summary=%S&source=LinkedIn
       title=\"\"
       onclick=\"javascript:ga('send', 'event', 'Button', 'Click', 'LinkedIn Share');\"
       target=\"_blank\">
@@ -1309,7 +1309,7 @@ Put all configurations in the hash-table 'mon-configdb'
     "
     <!-- Open an issue -->
     <span class=\"gecko\">
-      <a href=\"https://github.com/mesbah-uddin/mesbah-uddin.github.io/issues/new?title=%%t&body=Change request feedback: https://mesbah-uddin.github.io/%%f\" target=\"_blank\">
+      <a href=\"https://github.com/mesbah-uddin/mesbah-uddin.github.io/issues/new?title=%t&body=Change request feedback: https://mesbah-uddin.github.io/%f\" target=\"_blank\">
         <i class=\"fab fa-github-square fa-2x\"></i>
       </a>
     </span>
@@ -1319,7 +1319,7 @@ Put all configurations in the hash-table 'mon-configdb'
 #+BEGIN_SRC emacs-lisp
   (defun mon-feedback-send-email-to ()
     "
-    <a href=\"mailto:?to=&amp;subject=https://mesbah-uddin.github.io/%%f&amp;body=https://mesbah-uddin.github.io/%%f\">
+    <a href=\"mailto:?to=&amp;subject=https://mesbah-uddin.github.io/%f&amp;body=https://mesbah-uddin.github.io/%f\">
       <i class=\"far fa-envelope fa-2x\"></i>
     </a>
   "
