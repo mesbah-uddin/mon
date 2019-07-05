@@ -1868,6 +1868,9 @@ Put all configurations in the hash-table 'mon-configdb'
                                   ;;-----
                                   (mon-publish-alist-name nil "notes")
                                   (mon-publish-alist-name nil "notes-archive")
+                                  ;;
+                                  (mon-publish-alist-name nil "slides")
+                                  ;;(mon-publish-alist-name nil "chunk-reveal") ;; default
                                   )))
 #+END_SRC
 
@@ -2027,6 +2030,62 @@ Put all configurations in the hash-table 'mon-configdb'
                      :with-tags nil
                      ))
 #+END_SRC
+**** SLIDES
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'org-publish-project-alist
+               (list (mon-publish-alist-name nil "slides")
+                     :base-directory (mon-base-directory nil "slides")
+
+                     :publishing-directory (mon-publishing-directory nil "slides")
+                     :publishing-function 'org-reveal-publish-to-reveal;;'org-html-publish-to-html
+                     :recursive t
+                     ;;:exclude (regexp-opt (list "archive-simple.org" "archive-taglinks.org" "tags.org"))
+
+
+                     ;;:html-postamble (mon-html-postamble)
+                     ;;:html-preamble (mon-html-preamble
+                     ;;                "apex"
+                     ;;                (mon-theme-name)
+                     ;;                (mon-theme-attributes :mainsail) ;; mainsail/headline @ args: ship-structure
+                     ;;                (mon-theme-attributes :headsail)) ;; headsail/headline @ args: ship-structure
+                     :org-reveal-postamble (mon-html-postamble)
+                     :org-reveal-preamble (mon-html-preamble
+                                           "apex"
+                                           (mon-theme-name)
+                                           (mon-theme-attributes :mainsail) ;; mainsail/headline @ args: ship-structure
+                                           (mon-theme-attributes :headsail)) ;; headsail/headline @ args: ship-structure
+
+                     ;;:html-head-include-default-style nil ;; Disable default css style
+                     ;;:html-head-include-scripts nil ;; Disable default javascript
+                     ;;:html-head (mon-html-head)
+                     :org-reveal-head-preamble (mon-html-head)
+
+
+                     :auto-sitemap nil
+                     ;;:sitemap-filename "index.org"
+                     ;;:sitemap-function 'mon-sitemap-function-article
+                     ;;:sitemap-sort-files 'anti-chronologically
+                     ;;:sitemap-format-entry 'mon-format-entry-article
+                     ;;;;
+                     ;;:sitemap-style 'list
+                     :with-tags nil
+                     ))
+#+END_SRC
+**** CHUNK-REVEAL
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'org-publish-project-alist
+               ;; Move chunk files, maybe move into
+               (list (mon-publish-alist-name nil "chunk-reveal") ;; default
+                     :base-directory (mon-base-directory "reveal.js")
+                     :exclued (regexp-opt (list (file-name-nondirectory (directory-file-name (mon-www-publish-directory)))))
+                     :base-extension (mon-base-extension)
+
+                     :publishing-directory (mon-publishing-directory "reveal.js")
+                     :publishing-function 'org-publish-attachment
+                     :recursive t
+                     ))
+#+END_SRC
+
 * STOCK
 ** GRAINS
 *** APEX
