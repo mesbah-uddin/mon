@@ -2109,35 +2109,62 @@ Put all configurations in the hash-table 'mon-configdb'
 #+begin_keywords
 
 #+end_keywords
-***** Profile highlights
+
+I am interested in technology innovation and ecosystem development to help people's better living.
+Although in some context this would literaly translate to better wages, e.g. in an ageing context
+this may mean augmenting with additional resources.
+I believe key success factors will closely address how people interact with each other to realize
+digital adoptation, minimize cultural gaps and maximize population pyramid benefits
+accross regional or disciplinary borders.\\
+
+Over the past I have had opportunities to work at different organizations ranging from academia
+to commertial industry as well as financial institutions. The reward of the journey is bestowed
+insights which is developed as concise notes for quick 1-2 minute reads.\\
+
+It will be a great pleasure if you may find useful hints in them for improving your judgement and decision making.
+Please don't hesitate to ask questions or send feedback in the comments.
+
+****** Profile highlights
+- Strategy Team Manager at [[https://planetway.com][Planetway Co. Ltd.]]
+- Client Advisory and Support at [[https://www.mathworks.com/][The MathWorks, Inc.]]
+- Consulting Software Engineer at [[https://www.spacetime-eng.com/en/][Space-Time Engineering Co. Ltd.]]
+- Faculty Member at [[http://www.kyushu-u.ac.jp/en/][Kyushu University]]
+- Member International Association for Cryptologic Research
+
+- Ph.D. in Computer Science, Kyushu University
+- JSPS DC2 fellow
+- Recipient of Monbukagakusho, MEXT and Rotari Yoneyama scholarships
+- Fluent in Bengali, Japanese, English
+
+***** COMMENT Profile Summary
 - experienced in IT, education, management and startups
 - interested in the latest trends in the international community and industry
 - motivated to contribute to the realization of people's better living
   by closing cultural gap and utilizing population pyramid benefits across regional borders
 
-***** (Biography)
-○ Planetway Co. Ltd., Strategy Team Manager (0.5 years)
-- Worked with the state-of-the-art technology of e-Estonia’s digital e-Government technology including X-Road
-- Developed team strategy for product quality, off-shore communication alignment, and orchestrated the very first product SLA
+***** COMMENT Profile highlights
+- Former Strategy Team Manager at Planetway Co. Ltd (.5 year) ::
+  + Developed team strategy for product quality, off-shore communication alignment, and orchestrated the very first product SLA
+  + Worked with the state-of-the-art technology of e-Estonia’s digital e-Government technology including X-Road
 
-○ The MathWorks Inc., Technical Advisory and Support (6.5 years)
-- Facilitated customers express ideas and collaborate across multiple domains (200+ accounts including well-known OEM/ODM/FinTech/EDU client companies with forecasting/optimization, data analytics, fast application development and deployment with API integration, model based design, etc.
+- Former Client Advisory and Support at The MathWorks Inc. (6.5 years) ::
+  + Facilitated customers express ideas and collaborate across multiple domains
+  + Assisted 200+ accounts including well-known OEM/ODM/FinTech/EDU client companies with forecasting/optimization, data analytics, fast application development and deployment with API integration, model based design, etc.
 
-○ Space-Time Engineering Co. Ltd., Consulting Software Engineer (1 year)
-- Analyzed requirements, planned, developed and implemented TCP/IP network simulation software and automated data analysis
+- Former Consulting Software Engineer at Space-Time Engineering Co. Ltd. (1 year) ::
+  + Analyzed requirements, planned, developed and implemented TCP/IP network simulation software and automated data analysis
 
-○ Kyushu University, Faculty member  (3 years)
-- Rolled out Team-Project-Based Master's program for developing high-skilled IT personnel
-- Supported Industry-Academia-Government Collaboration, E-JUST, QUBE, Silicon Sea Belt, etc.
+- Former Faculty Member at Kyushu University (3 years) ::
+  + Rolled out Team-Project-Based Master's program for developing high-skilled IT personnel
+  + Supported Industry-Academia-Government Collaboration, E-JUST, QUBE, Silicon Sea Belt, etc.
 
-
-○ Kyushu University, Faculty of Engineering, B.Eng.
-- Department of Electrical and Information Engineering
-  Studied low power/area LSI design optimization methodology
-○ Kyushu University, Graduate School of Information Science and Technology, M.Eng.,  Ph.D.
-- Department of Computer Science and Communication Engineering
-  Studied low power/area LSI design optimization methodology (M.Eng.)
-  Studied security issues for identity and access management services (Ph.D.)
+- Kyushu University, Faculty of Engineering, B.Eng. ::
+  + Department of Electrical and Information Engineering\\
+    Studied low power/area LSI design optimization methodology
+- Kyushu University, Graduate School of Information Science and Technology, M.Eng.,  Ph.D. ::
+  + Department of Computer Science and Communication Engineering\\
+    Studied low power/area LSI design optimization methodology (M.Eng.)
+    Studied security issues for identity and access management services (Ph.D.)
 
 ***** COMMENT References
 https://www.ssken.gr.jp/MAINSITE/download/newsletter/2007/godo/ppt11.pdf
